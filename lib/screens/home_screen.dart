@@ -2,6 +2,9 @@ import 'package:aguinha/screens/error_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,6 +16,17 @@ class HomeScreen extends StatelessWidget {
     ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.logout();
+              },
+              icon: Icon(Icons.logout))
+        ],
+      ),
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
