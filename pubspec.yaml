@@ -30,6 +30,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_messaging: ^10.0.4
   firebase_core: ^1.4.0
+  firebase_auth: ^3.0.1
+  google_sign_in: ^5.0.5
+  provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

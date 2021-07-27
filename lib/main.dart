@@ -1,6 +1,11 @@
+import 'package:aguinha/provider.dart';
+import 'package:aguinha/screens/home_screen.dart';
+import 'package:aguinha/screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -25,76 +30,129 @@ class AguinhaApp extends StatelessWidget {
   const AguinhaApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
-    );
-  }
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (context) => GoogleSignInProvider(),
+        child: MaterialApp(
+          home: HomeScreen(),
+        ),
+      );
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification!;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        print(notification.title);
-        // flutterLocalNotificationsPlugin.show(
-        //     notification.hashCode,
-        //     notification.title,
-        //     notification.body,
-        //     NotificationDetails(
-        //       android: AndroidNotificationDetails(
-        //         channel.id,
-        //         channel.name,
-        //         channel.description,
-        //         color: Colors.blue,
-        //         playSound: true,
-        //         icon: '@mipmap/ic_launcher',
-        //       ),
-        //     ));
-      }
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      RemoteNotification notification = message.notification!;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: Text(notification.title!),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text(notification.body!)],
-                  ),
-                ),
-              );
-            });
-      }
-    });
-
-    FirebaseMessaging.instance.getToken().then((value) => print(value));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Text('Edionay'),
-      ),
-    );
-  }
-}
+// class HomeScreen extends StatefulWidget {
+//   const HomeScreen({Key? key}) : super(key: key);
+//
+//   @override
+//   _HomeScreenState createState() => _HomeScreenState();
+// }
+//
+// class _HomeScreenState extends State<HomeScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+//       RemoteNotification notification = message.notification!;
+//       AndroidNotification? android = message.notification?.android;
+//       if (notification != null && android != null) {
+//         print(notification.title);
+//       }
+//     });
+//
+//     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+//       print('A new onMessageOpenedApp event was published!');
+//       RemoteNotification notification = message.notification!;
+//       AndroidNotification? android = message.notification?.android;
+//       if (notification != null && android != null) {
+//         showDialog(
+//             context: context,
+//             builder: (_) {
+//               return AlertDialog(
+//                 title: Text(notification.title!),
+//                 content: SingleChildScrollView(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [Text(notification.body!)],
+//                   ),
+//                 ),
+//               );
+//             });
+//       }
+//     });
+//     FirebaseMessaging.instance.getToken().then((value) => print(value));
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final Shader linearGradient = LinearGradient(
+//       colors: <Color>[Color(0xff2bd3ff), Color(0xff015afb)],
+//     ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+//
+//     return Scaffold(
+//       body: SafeArea(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.end,
+//           children: [
+//             Expanded(
+//               child: Center(
+//                 child: Text(
+//                   'Aguinha',
+//                   style: new TextStyle(
+//                       fontSize: 60.0,
+//                       fontWeight: FontWeight.bold,
+//                       foreground: Paint()..shader = linearGradient),
+//                 ),
+//               ),
+//             ),
+//             ClipRRect(
+//               borderRadius: BorderRadius.only(
+//                 topLeft: Radius.circular(80),
+//               ),
+//               child: Column(
+//                 children: [
+//                   Container(
+//                     color: Color(0xFF0052F1),
+//                     width: double.infinity,
+//                     padding: EdgeInsets.symmetric(vertical: 30),
+//                     child: Text(
+//                       'FAMINTE',
+//                       textAlign: TextAlign.center,
+//                       style: TextStyle(
+//                           color: Colors.white,
+//                           fontSize: 40,
+//                           fontWeight: FontWeight.bold),
+//                     ),
+//                   ),
+//                   Container(
+//                     color: Color(0xFF0016DA),
+//                     width: double.infinity,
+//                     padding: EdgeInsets.symmetric(vertical: 30),
+//                     child: Text(
+//                       'AZUKI',
+//                       textAlign: TextAlign.center,
+//                       style: TextStyle(
+//                           color: Colors.white,
+//                           fontSize: 40,
+//                           fontWeight: FontWeight.bold),
+//                     ),
+//                   ),
+//                   Container(
+//                     color: Color(0xFF020E7B),
+//                     width: double.infinity,
+//                     padding: EdgeInsets.symmetric(vertical: 30),
+//                     child: Text(
+//                       'DINO',
+//                       textAlign: TextAlign.center,
+//                       style: TextStyle(
+//                           color: Colors.white,
+//                           fontSize: 40,
+//                           fontWeight: FontWeight.bold),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
