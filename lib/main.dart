@@ -1,80 +1,99 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(YoWaterApp());
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('A bg message just showed up :  ${message.messageId}');
 }
 
-class YoWaterApp extends StatelessWidget {
-  const YoWaterApp({Key? key}) : super(key: key);
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  runApp(AguinhaApp());
+}
+
+class AguinhaApp extends StatelessWidget {
+  const AguinhaApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: SafeArea(child: YosScreen()));
+    return MaterialApp(
+      home: HomeScreen(),
+    );
   }
 }
 
-class YosScreen extends StatelessWidget {
-  const YosScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        print(notification.title);
+        // flutterLocalNotificationsPlugin.show(
+        //     notification.hashCode,
+        //     notification.title,
+        //     notification.body,
+        //     NotificationDetails(
+        //       android: AndroidNotificationDetails(
+        //         channel.id,
+        //         channel.name,
+        //         channel.description,
+        //         color: Colors.blue,
+        //         playSound: true,
+        //         icon: '@mipmap/ic_launcher',
+        //       ),
+        //     ));
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text(notification.title!),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(notification.body!)],
+                  ),
+                ),
+              );
+            });
+      }
+    });
+
+    FirebaseMessaging.instance.getToken().then((value) => print(value));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple,
-      body: Column(
-        children: [
-          Container(
-            color: Color(0xFF000C66),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 30),
-            child: Text(
-              'JOAO',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          Container(
-            color: Color(0xFF122620),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 30),
-            child: Text(
-              'NATALHA',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          Container(
-            color: Color(0xFF274472),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 30),
-            child: Text(
-              'DAVID',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          Container(
-            color: Color(0xFFB68D40),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 30),
-            child: Text(
-              'MATHEUS',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+      body: Container(
+        child: Text('Edionay'),
       ),
     );
   }
