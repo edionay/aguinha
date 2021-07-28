@@ -1,5 +1,4 @@
-import 'package:aguinha/screens/error_screen.dart';
-import 'package:aguinha/screens/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,44 +46,49 @@ class HomeScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Container(
-                    color: Color(0xFF0052F1),
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 30),
-                    child: Text(
-                      'FAMINTE',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    color: Color(0xFF0016DA),
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 30),
-                    child: Text(
-                      'AZUKI',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    color: Color(0xFF020E7B),
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 30),
-                    child: Text(
-                      'DINO',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .collection('friends')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.lightBlueAccent,
+                          ),
+                        );
+                      }
+                      final friends = snapshot.data!.docs;
+                      List<GestureDetector> friendsWidgets = [];
+                      for (var friend in friends) {
+                        print(friend['nickname']);
+                        friendsWidgets.add(
+                          GestureDetector(
+                            onTap: () {
+                              print(friend['nickname']);
+                            },
+                            child: Container(
+                              color: Color(0xFF0052F1),
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(vertical: 30),
+                              child: Text(
+                                friend['nickname'],
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: friendsWidgets,
+                      );
+                    },
                   ),
                 ],
               ),
