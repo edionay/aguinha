@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/error_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,6 +13,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+
+const bool USE_EMULATOR = false;
+
+Future _connectToFirebaseEmulator() async {
+  final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
+
+  // FirebaseFirestore.instance.useFirestoreEmulator('$localHostString', 8080);
+  FirebaseFunctions.instance.useFunctionsEmulator('$localHostString', 5001);
+}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -28,6 +41,11 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  if (USE_EMULATOR) {
+    _connectToFirebaseEmulator();
+  }
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await flutterLocalNotificationsPlugin
