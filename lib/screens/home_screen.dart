@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 import '../provider.dart';
@@ -15,8 +17,37 @@ const waterColors = [
   Color(0xFF001233),
 ];
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        print(notification.title);
+        print(message.notification!.android!.channelId);
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        final snackBar = SnackBar(
+            content: Text('${notification.title} também está bebendo água!'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,38 +98,13 @@ class HomeScreen extends StatelessWidget {
                       );
                     }
                     final friends = snapshot.data!.docs;
-                    List<ElevatedButton> friendsWidgets = [];
+                    List<FriendTile> friendsWidgets = [];
 
                     for (var friend in friends) {
                       friends.indexOf(friend);
                       friendsWidgets.add(
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(0))),
-                              primary: waterColors[friends.indexOf(friend)]),
-                          onPressed: () async {
-                            HttpsCallable callable = FirebaseFunctions.instance
-                                .httpsCallable('notify');
-                            final response = await callable
-                                .call({'to': friend.id, 'from': 'EDIONAY'});
-                            print(response.data);
-                          },
-                          child: Container(
-                            // color: Color(0xFF0052F1),
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 30),
-                            child: Text(
-                              friend['nickname'],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
+                        FriendTile(
+                            index: friends.indexOf(friend), friend: friend),
                       );
                     }
                     return Column(
@@ -110,5 +116,82 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ));
+  }
+}
+
+class FriendTile extends StatefulWidget {
+  const FriendTile({
+    Key? key,
+    required this.index,
+    required this.friend,
+  }) : super(key: key);
+
+  final int index;
+  final QueryDocumentSnapshot<Object?> friend;
+
+  @override
+  _FriendTileState createState() => _FriendTileState();
+}
+
+class _FriendTileState extends State<FriendTile> {
+  var loading = false;
+  @override
+  Widget build(BuildContext context) {
+    return Slidable(
+      enabled: loading ? false : true,
+      actionPane: SlidableScrollActionPane(),
+      actionExtentRatio: 0.25,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(0))),
+            primary: waterColors[widget.index],
+            onSurface: waterColors[widget.index]),
+        onPressed: loading
+            ? null
+            : () async {
+                setState(() {
+                  loading = true;
+                });
+                HttpsCallable callable =
+                    FirebaseFunctions.instance.httpsCallable('notify');
+                final response = await callable.call({'to': widget.friend.id});
+                print(response.data);
+                final snackBar = SnackBar(
+                    content:
+                        Text('${widget.friend['nickname']} foi notificado!'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                setState(() {
+                  loading = false;
+                });
+              },
+        child: Column(
+          children: [
+            Container(
+              // color: Color(0xFF0052F1),
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 30),
+              child: Text(
+                widget.friend['nickname'],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            if (loading) LinearProgressIndicator()
+          ],
+        ),
+      ),
+      secondaryActions: <Widget>[
+        IconSlideAction(
+          caption: 'Delete',
+          color: Colors.red,
+          icon: Icons.delete,
+          onTap: () => {},
+        ),
+      ],
+    );
   }
 }
