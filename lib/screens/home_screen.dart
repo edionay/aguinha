@@ -1,3 +1,5 @@
+import 'package:aguinha/constants.dart';
+import 'package:aguinha/screens/friends_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -81,6 +83,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  color: Colors.blue,
+                  child: IconButton(
+                    icon: Icon(Icons.group_add),
+                    padding: EdgeInsets.all(kDefaultPadding),
+                    color: Colors.white,
+                    iconSize: 40.0,
+                    onPressed: () {
+                      Navigator.pushNamed(context, FriendsScreen.id);
+                    },
+                  ),
+                )
+              ],
+            ),
             Column(
               children: [
                 StreamBuilder<QuerySnapshot>(
@@ -156,7 +175,6 @@ class _FriendTileState extends State<FriendTile> {
                 HttpsCallable callable =
                     FirebaseFunctions.instance.httpsCallable('notify');
                 final response = await callable.call({'to': widget.friend.id});
-                print(response.data);
                 final snackBar = SnackBar(
                     content:
                         Text('${widget.friend['nickname']} foi notificado!'));

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/error_screen.dart';
+import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,9 +13,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-const bool USE_EMULATOR = false;
+const bool USE_EMULATOR = true;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
@@ -74,6 +76,8 @@ class AguinhaApp extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => GoogleSignInProvider(),
         child: MaterialApp(
+          theme: Theme.of(context)
+              .copyWith(textTheme: GoogleFonts.montserratTextTheme()),
           home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
@@ -90,6 +94,10 @@ class AguinhaApp extends StatelessWidget {
               }
             },
           ),
+          debugShowCheckedModeBanner: false,
+          routes: {
+            FriendsScreen.id: (context) => FriendsScreen(),
+          },
         ),
       );
 }
