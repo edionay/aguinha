@@ -1,5 +1,8 @@
 import 'package:aguinha/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -41,73 +44,9 @@ class FriendsScreen extends StatelessWidget {
                   height: kDefaultPadding,
                 ),
                 UserSearchSection(),
-                SizedBox(
-                  height: kDefaultPadding * 3,
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(left: kDefaultPadding),
-                    child: Text(
-                      'Convite por link',
-                      style: kSubheaderStyle,
-                    )),
-                SizedBox(
-                  height: kDefaultPadding,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: kDefaultPadding,
-                        vertical: kDefaultPadding * 2),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0))),
-                    primary: kPrimaryColor,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'COMPARTILHAR',
-                        style: TextStyle(
-                            fontSize: kMediumFontSize,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Icon(
-                        Icons.share,
-                        color: Colors.white,
-                        size: kBigIconSize,
-                      )
-                    ],
-                  ),
-                ),
                 ReceivedInvitesSection(),
                 SizedBox(
                   height: kDefaultPadding / 2,
-                ),
-                Card(
-                  shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  color: kPrimaryColor,
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: kDefaultPadding),
-                      child: Text(
-                        'AZUKI',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: kMediumFontSize,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: kDefaultPadding * 3,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: kDefaultPadding),
@@ -119,80 +58,40 @@ class FriendsScreen extends StatelessWidget {
                 SizedBox(
                   height: kDefaultPadding,
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(kDefaultPadding),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0))),
-                    primary: kPrimaryColor,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'FAMINTE',
-                        style: TextStyle(
-                            fontSize: kBigFontSize,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.done,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                          Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: kDefaultPadding / 2,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(kDefaultPadding),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0))),
-                    primary: kPrimaryColor,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'AZUKI',
-                        style: TextStyle(
-                            fontSize: kBigFontSize,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.done,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                          Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                Column(
+                  children: [
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .collection('sentRequests')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.lightBlueAccent,
+                            ),
+                          );
+                        }
+
+                        final receivedRequests = snapshot.data!.docs;
+                        if (receivedRequests.isEmpty)
+                          return Text('Nenhum convite pendente');
+                        List<Text> requestsWidgets = [];
+                        for (var request in receivedRequests) {
+                          print(request.get('nickname'));
+                          receivedRequests.indexOf(request);
+                          requestsWidgets.add(Text(request.get('nickname'))
+                              // FriendTile(index: friends.indexOf(friend), friend: friend),
+                              );
+                        }
+                        return Column(
+                          children: requestsWidgets,
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -222,80 +121,40 @@ class ReceivedInvitesSection extends StatelessWidget {
         SizedBox(
           height: kDefaultPadding,
         ),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.all(kDefaultPadding),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(0))),
-            primary: kPrimaryColor,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'AZUKI',
-                style: TextStyle(
-                    fontSize: kMediumFontSize,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.done,
-                    color: Colors.white,
-                    size: kBigIconSize,
-                  ),
-                  Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: kBigIconSize,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: kDefaultPadding / 2,
-        ),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.all(kDefaultPadding),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(0))),
-            primary: kPrimaryColor,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'AZUKI',
-                style: TextStyle(
-                    fontSize: kBigFontSize,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.done,
-                    color: Colors.white,
-                    size: kBigIconSize,
-                  ),
-                  Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: kBigIconSize,
-                  ),
-                ],
-              )
-            ],
-          ),
+        Column(
+          children: [
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection('receivedRequests')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.lightBlueAccent,
+                    ),
+                  );
+                }
+                final receivedRequests = snapshot.data!.docs;
+                if (receivedRequests.isEmpty)
+                  return Text('Nenhum convite pendente');
+                List<Text> requestsWidgets = [];
+
+                for (var request in receivedRequests) {
+                  print(request.get('nickname'));
+                  receivedRequests.indexOf(request);
+                  requestsWidgets.add(Text(request.get('nickname'))
+                      // FriendTile(index: friends.indexOf(friend), friend: friend),
+                      );
+                }
+                return Column(
+                  children: requestsWidgets,
+                );
+              },
+            ),
+          ],
         ),
       ],
     );
