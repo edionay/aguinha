@@ -70,7 +70,7 @@ class FriendsScreen extends StatelessWidget {
                       Text(
                         'COMPARTILHAR',
                         style: TextStyle(
-                            fontSize: kBigFontSize,
+                            fontSize: kMediumFontSize,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
@@ -82,131 +82,28 @@ class FriendsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: kDefaultPadding * 3,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: kDefaultPadding),
-                  child: Text(
-                    'Convites recebidos',
-                    style: kSubheaderStyle,
-                  ),
-                ),
-                SizedBox(
-                  height: kDefaultPadding,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(kDefaultPadding),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0))),
-                    primary: kPrimaryColor,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'AZUKI',
-                        style: TextStyle(
-                            fontSize: kBigFontSize,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.done,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                          Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+                ReceivedInvitesSection(),
                 SizedBox(
                   height: kDefaultPadding / 2,
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(kDefaultPadding),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0))),
-                    primary: kPrimaryColor,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
+                Card(
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                  color: kPrimaryColor,
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: kDefaultPadding),
+                      child: Text(
                         'AZUKI',
+                        textAlign: TextAlign.left,
                         style: TextStyle(
-                            fontSize: kBigFontSize,
+                            fontSize: kMediumFontSize,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.done,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                          Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: kDefaultPadding / 2,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(kDefaultPadding),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0))),
-                    primary: kPrimaryColor,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'AZUKI',
-                        style: TextStyle(
-                            fontSize: kBigFontSize,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.done,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                          Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: kBigIconSize,
-                          ),
-                        ],
-                      )
-                    ],
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -306,6 +203,105 @@ class FriendsScreen extends StatelessWidget {
   }
 }
 
+class ReceivedInvitesSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: kDefaultPadding * 3,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: kDefaultPadding),
+          child: Text(
+            'Convites recebidos',
+            style: kSubheaderStyle,
+          ),
+        ),
+        SizedBox(
+          height: kDefaultPadding,
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.all(kDefaultPadding),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(0))),
+            primary: kPrimaryColor,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'AZUKI',
+                style: TextStyle(
+                    fontSize: kMediumFontSize,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: kBigIconSize,
+                  ),
+                  Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: kBigIconSize,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: kDefaultPadding / 2,
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.all(kDefaultPadding),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(0))),
+            primary: kPrimaryColor,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'AZUKI',
+                style: TextStyle(
+                    fontSize: kBigFontSize,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: kBigIconSize,
+                  ),
+                  Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: kBigIconSize,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class UserSearchSection extends StatefulWidget {
   @override
   _UserSearchSectionState createState() => _UserSearchSectionState();
@@ -328,7 +324,7 @@ class _UserSearchSectionState extends State<UserSearchSection> {
             },
             enabled: !loading,
             textCapitalization: TextCapitalization.characters,
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: kMediumFontSize),
             decoration: InputDecoration(
                 hintStyle: TextStyle(color: Colors.white60),
                 border: InputBorder.none,
@@ -395,7 +391,14 @@ class _UserSearchSectionState extends State<UserSearchSection> {
                                           .httpsCallable('requestFriendship');
                                       final response = await callable
                                           .call({'username': username});
-                                      print(response.data);
+                                      if (response.data) {
+                                        Navigator.pop(context);
+                                        final snackBar = SnackBar(
+                                            content:
+                                                Text('Solicitação enviada!'));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                         primary: kPrimaryColor),
