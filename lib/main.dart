@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/error_screen.dart';
-import 'package:aguinha/screens/friends_screen.dart';
+import 'package:aguinha/screens/friends_screen/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

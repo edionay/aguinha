@@ -1,5 +1,5 @@
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/friends_screen.dart';
+import 'package:aguinha/screens/friends_screen/friends_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
