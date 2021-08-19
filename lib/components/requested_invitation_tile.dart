@@ -62,7 +62,7 @@ class RequestedInvitationTile extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(primary: kPrimaryColor),
-                      child: Text('Sim'),
+                      child: Text('Aceitar'),
                     ),
                     SizedBox(
                       width: kDefaultPadding,
@@ -81,7 +81,7 @@ class RequestedInvitationTile extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        'Não',
+                        'Recusar',
                         style: TextStyle(color: kPrimaryColor),
                       ),
                     ),

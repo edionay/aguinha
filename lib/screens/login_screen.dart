@@ -10,10 +10,10 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             final provider =
                 Provider.of<GoogleSignInProvider>(context, listen: false);
-            provider.googleLogin();
+            await provider.googleLogin(context);
           },
           child: Text('Entrar com o Google'),
         ),

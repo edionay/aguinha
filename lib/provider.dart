@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:aguinha/api.dart';
+import 'package:aguinha/screens/username_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,42 +12,55 @@ class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
+  bool hasUsername = false;
 
-  Future googleLogin() async {
-    final googleUser = await googleSignIn.signIn();
+  Future googleLogin(BuildContext context) async {
+    try {
+      final googleUser = await googleSignIn.signIn();
 
-    if (googleUser == null) return;
-    _user = googleUser;
+      if (googleUser == null) return;
+      _user = googleUser;
 
-    final googleAuth = await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
-    final firebaseUser =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    final userr = FirebaseAuth.instance.currentUser!;
-    print('Firebase User');
-    print(userr);
+      await FirebaseAuth.instance.signInWithCredential(credential);
 
-    final fmcToken = await FirebaseMessaging.instance.getToken();
+      final userr = FirebaseAuth.instance.currentUser!;
+      print('Firebase User');
+      print(userr);
 
-    final ref = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userr.uid)
-        .collection('tokens')
-        .doc(fmcToken);
+      final fmcToken = await FirebaseMessaging.instance.getToken();
 
-    await ref.set({
-      'token': fmcToken,
-      'created': FieldValue.serverTimestamp(),
-      'platform': Platform.operatingSystem
-    });
-    notifyListeners();
+      final ref = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userr.uid)
+          .collection('tokens')
+          .doc(fmcToken);
+
+      await ref.set({
+        'token': fmcToken,
+        'created': FieldValue.serverTimestamp(),
+        'platform': Platform.operatingSystem
+      });
+
+      notifyListeners();
+    } catch (error) {
+      print('Deu erro');
+      print(error);
+    }
   }
 
   Future logout() async {
-    await googleSignIn.disconnect();
+    print('chegou aqui');
+    try {
+      await googleSignIn.disconnect();
+    } catch (error) {
+      print(error.toString());
+    }
+    print('chegou aqui também');
     FirebaseAuth.instance.signOut();
   }
 }

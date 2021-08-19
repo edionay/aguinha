@@ -1,9 +1,7 @@
 import 'package:aguinha/api.dart';
 import 'package:aguinha/components/requested_invitation_tile.dart';
-import 'package:aguinha/components/sent_invitation_tile.dart';
 import 'package:aguinha/components/section_title.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ReceivedInvitesSection extends StatelessWidget {

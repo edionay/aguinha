@@ -19,7 +19,7 @@ class SentInvitationTile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Aceitar solicitação de amizade?'),
+                Text('Cancelar solicitação de amizade?'),
                 SizedBox(
                   height: kDefaultPadding * 2,
                 ),
@@ -50,26 +50,6 @@ class SentInvitationTile extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () async {
                         HttpsCallable callable = FirebaseFunctions.instance
-                            .httpsCallable('acceptFriendRequest');
-                        final response =
-                            await callable.call({'username': username});
-                        if (response.data) {
-                          final snackBar = SnackBar(
-                              content: Text(
-                                  'Agora você e ${splittedUsername[0]} são amigos!'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          Navigator.pop(context);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(primary: kPrimaryColor),
-                      child: Text('Sim'),
-                    ),
-                    SizedBox(
-                      width: kDefaultPadding,
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        HttpsCallable callable = FirebaseFunctions.instance
                             .httpsCallable('deleteFriendRequest');
                         final response =
                             await callable.call({'username': username});
@@ -79,6 +59,16 @@ class SentInvitationTile extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           Navigator.pop(context);
                         }
+                      },
+                      style: ElevatedButton.styleFrom(primary: kPrimaryColor),
+                      child: Text('Excluir'),
+                    ),
+                    SizedBox(
+                      width: kDefaultPadding,
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
                       },
                       child: Text(
                         'Não',

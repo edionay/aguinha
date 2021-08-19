@@ -1,5 +1,7 @@
+import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/friends_screen/friends_screen.dart';
+import 'package:aguinha/screens/friends_screen.dart';
+import 'package:aguinha/screens/username_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,6 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
             content: Text('${notification.title} também está bebendo água!'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
+    });
+
+    API.hasUsername().then((hasUsername) {
+      print(hasUsername);
+      if (!hasUsername)
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => UsernameScreen()),
+            (route) => false);
     });
   }
 
