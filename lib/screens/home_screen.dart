@@ -3,6 +3,7 @@ import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
+import 'package:aguinha/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,6 +31,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late AguinhaUser currentUser;
+  bool loadedUser = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,7 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
-    API.getUsername().catchError((error) {
+    API.getCurrentUser().then((user) {
+      setState(() {
+        currentUser = user;
+        loadedUser = true;
+      });
+    }).catchError((error) {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => UsernameScreen()),
@@ -82,6 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            if (loadedUser)
+              Row(
+                children: [Text('Olá, '), Text(currentUser.getUsername())],
+              ),
             Expanded(
               child: Center(
                 child: Text(
