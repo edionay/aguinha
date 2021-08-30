@@ -1,3 +1,4 @@
+import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/friends_screen.dart';
@@ -52,13 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
-    API.hasUsername().then((hasUsername) {
-      print(hasUsername);
-      if (!hasUsername)
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => UsernameScreen()),
-            (route) => false);
+    API.getUsername().catchError((error) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => UsernameScreen()),
+          (route) => false);
     });
   }
 

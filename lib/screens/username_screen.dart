@@ -15,9 +15,13 @@ class UsernameScreen extends StatefulWidget {
 }
 
 class _UsernameScreenState extends State<UsernameScreen> {
-  String username = '';
+  String nickname = '';
   bool loading = false;
   late TextEditingController _controller;
+
+  Function setUsername = (nickname) async {
+    await API.setUsername(nickname);
+  };
 
   @override
   void initState() {
@@ -33,17 +37,6 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Function setUsername = (username) async {
-      print(username.isNotEmpty);
-      print(username);
-
-      await API.setUsername(username.toUpperCase());
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-          (route) => false);
-    };
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -58,8 +51,16 @@ class _UsernameScreenState extends State<UsernameScreen> {
             Container(
               color: kPrimaryColor,
               child: TextField(
-                onSubmitted: (value) {
-                  setUsername(username);
+                onSubmitted: (value) async {
+                  setState(() {
+                    loading = true;
+                  });
+
+                  await API.setUsername(nickname.toUpperCase());
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      (route) => false);
                 },
                 controller: _controller,
                 onChanged: (value) {
@@ -71,7 +72,9 @@ class _UsernameScreenState extends State<UsernameScreen> {
                   //   _controller.selection = TextSelection.fromPosition(
                   //       TextPosition(offset: _controller.text.length));
                   // });
-                  username = value;
+                  setState(() {
+                    nickname = value;
+                  });
                 },
                 // enabled: !loading,
                 inputFormatters: [
@@ -86,11 +89,30 @@ class _UsernameScreenState extends State<UsernameScreen> {
                     fillColor: Colors.white),
               ),
             ),
-            TextButton(
-                onPressed: () async {
-                  setUsername(username);
-                },
-                child: Text('Continuar'))
+            if (!loading)
+              TextButton(
+                  onPressed: () async {
+                    setState(() {
+                      loading = true;
+                    });
+                    try {
+                      await setUsername(nickname);
+                      print('nome configurado');
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                          (route) => false);
+                    } catch (error) {
+                      setState(() {
+                        loading = false;
+                      });
+                      final snackBar =
+                          SnackBar(content: Text('Falha ao criar usuário'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  },
+                  child: Text('Continuar')),
+            if (loading) CircularProgressIndicator()
           ],
         ),
       ),

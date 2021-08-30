@@ -1,3 +1,4 @@
+import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/friends_screen/sections/received_invites_section.dart';
@@ -32,7 +33,20 @@ class FriendsScreen extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 Row(
-                  children: [],
+                  children: [
+                    FutureBuilder(
+                      future: API.getCurrentUser(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<AguinhaUser> snapshot) {
+                        if (snapshot.hasData) {
+                          print(snapshot.data);
+                          return Text(snapshot.data!.getUsername());
+                        } else {
+                          return Text('Ediona');
+                        }
+                      },
+                    )
+                  ],
                 ),
                 UserSearchSection(),
                 ReceivedInvitesSection(),
