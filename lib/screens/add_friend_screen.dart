@@ -13,7 +13,7 @@ class AddUserScreen extends StatefulWidget {
 }
 
 class _AddUserScreenState extends State<AddUserScreen> {
-  bool loading = false;
+  bool loading = true;
   String? username;
   AguinhaUser? friend;
   final _controller = TextEditingController();
@@ -72,6 +72,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                             setState(() {
                               loading = false;
                             });
+                            final snackBar =
+                                SnackBar(content: Text('Usuário inexistente'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           });
                         }
                       },
@@ -112,8 +116,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
+                          setState(() {
+                            loading = true;
+                          });
                           await API.sendFriendshipRequest(friend!);
-                          Navigator.pop(context, 'Convite enviado!');
+                          Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(primary: kPrimaryColor),
                         child: Text('Sim'),

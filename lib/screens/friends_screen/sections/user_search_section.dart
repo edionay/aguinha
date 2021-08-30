@@ -40,7 +40,7 @@ class _UserSearchSectionState extends State<UserSearchSection> {
                     border: InputBorder.none,
                     suffixIcon: IconButton(
                       onPressed: () async {
-                        Navigator.push(
+                        final response = await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
