@@ -11,9 +11,9 @@ class RequestedInvitationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         final splittedUsername = username.split('#');
-        showModalBottomSheet(
+        final requestChoice = await showModalBottomSheet(
           context: context,
           builder: (_) => Container(
             child: Column(
@@ -49,17 +49,7 @@ class RequestedInvitationTile extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        HttpsCallable callable = FirebaseFunctions.instance
-                            .httpsCallable('acceptFriendRequest');
-                        final response =
-                            await callable.call({'username': username});
-                        if (response.data) {
-                          final snackBar = SnackBar(
-                              content: Text(
-                                  'Agora você e ${splittedUsername[0]} são amigos!'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          Navigator.pop(context);
-                        }
+                        Navigator.pop(context, true);
                       },
                       style: ElevatedButton.styleFrom(primary: kPrimaryColor),
                       child: Text('Aceitar'),
@@ -69,16 +59,7 @@ class RequestedInvitationTile extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () async {
-                        HttpsCallable callable = FirebaseFunctions.instance
-                            .httpsCallable('deleteFriendRequest');
-                        final response =
-                            await callable.call({'username': username});
-                        if (response.data) {
-                          final snackBar =
-                              SnackBar(content: Text('Solicitação removida!'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          Navigator.pop(context);
-                        }
+                        Navigator.pop(context, false);
                       },
                       child: Text(
                         'Recusar',
@@ -91,6 +72,109 @@ class RequestedInvitationTile extends StatelessWidget {
             ),
           ),
         );
+        if (requestChoice != null) {
+          if (requestChoice) {
+            showModalBottomSheet(
+                context: context,
+                builder: (_) {
+                  HttpsCallable callable = FirebaseFunctions.instance
+                      .httpsCallable('acceptFriendRequest');
+                  callable.call({'username': username}).then((response) {
+                    if (response.data) {
+                      final snackBar = SnackBar(
+                          content: Text(
+                              'Agora você e ${splittedUsername[0]} são amigos!'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Navigator.pop(context);
+                    }
+                  });
+
+                  return Container(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                });
+          }
+          print(requestChoice);
+        }
+
+        // showModalBottomSheet(
+        //   context: context,
+        //   builder: (_) => Container(
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Text('Aceitar solicitação de amizade?'),
+        //         SizedBox(
+        //           height: kDefaultPadding * 2,
+        //         ),
+        //         Column(
+        //           crossAxisAlignment: CrossAxisAlignment.end,
+        //           children: [
+        //             Text(
+        //               splittedUsername[0],
+        //               style: TextStyle(
+        //                   fontSize: 40,
+        //                   color: kPrimaryColor,
+        //                   fontWeight: FontWeight.bold),
+        //             ),
+        //             Text('#${splittedUsername[1]}',
+        //                 textAlign: TextAlign.left,
+        //                 style: TextStyle(
+        //                     fontWeight: FontWeight.normal,
+        //                     fontSize: 24,
+        //                     color: Colors.grey)),
+        //           ],
+        //         ),
+        //         SizedBox(
+        //           height: kDefaultPadding,
+        //         ),
+        //         Row(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: [
+        //             ElevatedButton(
+        //               onPressed: () async {
+        //                 HttpsCallable callable = FirebaseFunctions.instance
+        //                     .httpsCallable('acceptFriendRequest');
+        //                 final response =
+        //                     await callable.call({'username': username});
+        //                 if (response.data) {
+        //                   final snackBar = SnackBar(
+        //                       content: Text(
+        //                           'Agora você e ${splittedUsername[0]} são amigos!'));
+        //                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        //                   Navigator.pop(context);
+        //                 }
+        //               },
+        //               style: ElevatedButton.styleFrom(primary: kPrimaryColor),
+        //               child: Text('Aceitar'),
+        //             ),
+        //             SizedBox(
+        //               width: kDefaultPadding,
+        //             ),
+        //             TextButton(
+        //               onPressed: () async {
+        //                 HttpsCallable callable = FirebaseFunctions.instance
+        //                     .httpsCallable('deleteFriendRequest');
+        //                 final response =
+        //                     await callable.call({'username': username});
+        //                 if (response.data) {
+        //                   final snackBar =
+        //                       SnackBar(content: Text('Solicitação removida!'));
+        //                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        //                   Navigator.pop(context);
+        //                 }
+        //               },
+        //               child: Text(
+        //                 'Recusar',
+        //                 style: TextStyle(color: kPrimaryColor),
+        //               ),
+        //             ),
+        //           ],
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // );
       },
       child: Card(
         margin: EdgeInsets.only(bottom: kDefaultPadding / 2),
