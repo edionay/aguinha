@@ -4,5 +4,5 @@ const kDefaultPadding = 10.0;
 const kBigIconSize = 30.0;
 const kBigFontSize = 30.0;
 const kMediumFontSize = 20.0;
-const kPrimaryColor = Color(0xFF0052F1);
+const kPrimaryColor = Color(0xFF045A8B);
 const kSubheaderStyle = TextStyle(color: kPrimaryColor, fontSize: 16);

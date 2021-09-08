@@ -161,10 +161,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     List<FriendTile> friendsWidgets = [];
 
                     for (var friend in friends) {
+                      var aguinhaFriend = AguinhaUser(
+                          friend.id, friend['nickname'], friend['suffix']);
                       friends.indexOf(friend);
                       friendsWidgets.add(
                         FriendTile(
-                            index: friends.indexOf(friend), friend: friend),
+                            index: friends.indexOf(friend),
+                            friend: aguinhaFriend),
                       );
                     }
                     return Column(
@@ -187,7 +190,7 @@ class FriendTile extends StatefulWidget {
   }) : super(key: key);
 
   final int index;
-  final QueryDocumentSnapshot<Object?> friend;
+  final AguinhaUser friend;
 
   @override
   _FriendTileState createState() => _FriendTileState();
@@ -215,10 +218,9 @@ class _FriendTileState extends State<FriendTile> {
                 });
                 HttpsCallable callable =
                     FirebaseFunctions.instance.httpsCallable('notify');
-                final response = await callable.call({'to': widget.friend.id});
+                final response = await callable.call({'to': widget.friend.uid});
                 final snackBar = SnackBar(
-                    content:
-                        Text('${widget.friend['nickname']} foi notificado!'));
+                    content: Text('${widget.friend.nickname} foi notificado!'));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 setState(() {
                   loading = false;
@@ -231,7 +233,7 @@ class _FriendTileState extends State<FriendTile> {
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 30),
               child: Text(
-                widget.friend['nickname'],
+                widget.friend.nickname,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white,
@@ -248,7 +250,16 @@ class _FriendTileState extends State<FriendTile> {
           caption: 'Delete',
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => {},
+          onTap: () {
+            HttpsCallable callable =
+                FirebaseFunctions.instance.httpsCallable('unfriend');
+            callable.call({'uid': widget.friend.uid}).then((response) {
+              final snackBar = SnackBar(
+                  content:
+                      Text('Amizade com${widget.friend.nickname} desfeita!'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
+          },
         ),
       ],
     );
