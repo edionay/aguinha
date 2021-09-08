@@ -4,9 +4,9 @@ import 'package:aguinha/constants.dart';
 import 'package:flutter/material.dart';
 
 class AddUserScreen extends StatefulWidget {
-  const AddUserScreen({required this.username});
-
-  final username;
+  // const AddUserScreen({required this.username});
+  //
+  // final username;
 
   @override
   _AddUserScreenState createState() => _AddUserScreenState();
@@ -14,7 +14,7 @@ class AddUserScreen extends StatefulWidget {
 
 class _AddUserScreenState extends State<AddUserScreen> {
   bool loading = true;
-  String? username;
+  String username = '';
   AguinhaUser? friend;
   final _controller = TextEditingController();
 
@@ -22,7 +22,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    API.getUserByUsername(widget.username).then((user) {
+    API.getUserByUsername(username).then((user) {
       setState(() {
         loading = false;
         friend = user;
@@ -30,8 +30,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
     }).catchError((error) {
       setState(() {
         loading = false;
-        _controller.text = widget.username;
-        username = widget.username;
+        _controller.text = username;
+        username = username;
       });
     });
   }
@@ -62,22 +62,19 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         setState(() {
                           loading = true;
                         });
-                        if (username != null) {
-                          API.getUserByUsername(username!).then((user) {
-                            setState(() {
-                              friend = user;
-                              loading = false;
-                            });
-                          }).catchError((error) {
-                            setState(() {
-                              loading = false;
-                            });
-                            final snackBar =
-                                SnackBar(content: Text('Usuário inexistente'));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                        API.getUserByUsername(username).then((user) {
+                          setState(() {
+                            friend = user;
+                            loading = false;
                           });
-                        }
+                        }).catchError((error) {
+                          setState(() {
+                            loading = false;
+                          });
+                          final snackBar =
+                              SnackBar(content: Text('Usuário inexistente'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        });
                       },
                       child: Text('Buscar'))
                 ],
