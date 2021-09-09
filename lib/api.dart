@@ -48,11 +48,7 @@ class API {
 
   static setUsername(String nickname) async {
     String suffix = (Random().nextInt(8999) + 1000).toString();
-
-    print(FirebaseAuth.instance.currentUser!.uid);
-    print(nickname);
-    print(suffix);
-
+    nickname = nickname.trim();
     return await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
