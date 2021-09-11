@@ -60,13 +60,10 @@ class API {
   }
 
   static Future<AguinhaUser> getUserByUsername(String username) async {
-    if (username == null) throw 'Usuário inválido';
     final usersSnapshot = await FirebaseFirestore.instance
         .collection("users")
         .where('username', isEqualTo: username)
         .get();
-    print(username);
-    print(usersSnapshot.size);
     if (usersSnapshot.size > 0) {
       final user = AguinhaUser(
           usersSnapshot.docs[0].id,
@@ -74,7 +71,7 @@ class API {
           usersSnapshot.docs[0].get('suffix'));
       return user;
     } else
-      throw 'Usuário não encontrado';
+      throw 'usuário não encontrado';
   }
 
   static Future<AguinhaUser> getCurrentUser() async {
