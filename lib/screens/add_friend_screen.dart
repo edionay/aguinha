@@ -8,6 +8,8 @@ class AddUserScreen extends StatefulWidget {
   //
   // final username;
 
+  static String id = 'add_friend_screen';
+
   @override
   _AddUserScreenState createState() => _AddUserScreenState();
 }

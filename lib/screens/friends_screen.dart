@@ -4,6 +4,7 @@ import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/friends_screen/sections/received_invites_section.dart';
 import 'package:aguinha/screens/friends_screen/sections/sent_requests_sections.dart';
 import 'package:aguinha/screens/username_screen.dart';
+import 'package:aguinha/ui/subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -139,23 +140,6 @@ class FriendsScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class Subtitle extends StatelessWidget {
-  const Subtitle({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-          color: Color(0xFF005687),
-          fontSize: 24.0,
-          fontWeight: FontWeight.bold),
     );
   }
 }

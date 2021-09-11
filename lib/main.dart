@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:aguinha/api.dart';
 import 'package:aguinha/provider.dart';
+import 'package:aguinha/screens/add_friend_screen.dart';
 import 'package:aguinha/screens/error_screen.dart';
 import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/loading_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
+import 'package:aguinha/screens/settings_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -100,7 +102,9 @@ class AguinhaApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routes: {
             FriendsScreen.id: (context) => FriendsScreen(),
-            UsernameScreen.id: (context) => UsernameScreen()
+            AddUserScreen.id: (context) => AddUserScreen(),
+            UsernameScreen.id: (context) => UsernameScreen(),
+            SettingsScreen.id: (context) => SettingsScreen()
           },
         ),
       );

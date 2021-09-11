@@ -1,27 +1,21 @@
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
+import 'package:aguinha/provider.dart';
+import 'package:aguinha/screens/add_friend_screen.dart';
 import 'package:aguinha/screens/friends_screen.dart';
+import 'package:aguinha/screens/settings_screen.dart';
+import 'package:aguinha/ui/subtitle.dart';
 import 'package:aguinha/screens/username_screen.dart';
-import 'package:aguinha/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-
-import '../provider.dart';
-
-const waterColors = [
-  Color(0xFF0466C8),
-  Color(0xFF0353A4),
-  Color(0xFF023E7D),
-  Color(0xFF002855),
-  Color(0xFF001845),
-  Color(0xFF001233),
-];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -77,191 +71,264 @@ class _HomeScreenState extends State<HomeScreen> {
     ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
     return Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      final provider = Provider.of<GoogleSignInProvider>(
-                          context,
-                          listen: false);
-                      provider.logout().then((value) => Navigator.pop(context));
-                      return Container(
-                        height: 200,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const Text('Saindo...'),
-                            ],
-                          ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              SvgPicture.asset(
+                'assets/top_background.svg',
+                fit: BoxFit.cover,
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kDefaultPadding * 2,
+                      vertical: kDefaultPadding * 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'aguinha',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: kDefaultPadding,
+                      ),
+                      if (loadedUser)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              currentUser.nickname,
+                              style: TextStyle(
+                                  color: Color(0xFF7FBFE5),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              '#${currentUser.suffix}',
+                              style: TextStyle(
+                                  color: Color(0xFFB0D9EF),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  );
-                },
-                icon: Icon(Icons.logout))
-          ],
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (loadedUser)
-              Row(
-                children: [Text('Olá, '), Text(currentUser.getUsername())],
-              ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  'Aguinha',
-                  style: new TextStyle(
-                      fontSize: 60.0,
-                      fontWeight: FontWeight.bold,
-                      foreground: Paint()..shader = linearGradient),
+                    ],
+                  ),
                 ),
-              ),
+              )
+            ],
+          ),
+          Expanded(
+            child: Text(''),
+            // child: Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Icon(Icons.local_drink),
+            //     SizedBox(
+            //       width: kDefaultPadding / 2,
+            //     ),
+            //     Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Text('notificar'),
+            //         Text('todos'),
+            //       ],
+            //     )
+            //   ],
+            // ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: kDefaultPadding * 2, bottom: kDefaultPadding / 2),
+            child: Subtitle(title: 'amigos'),
+          ),
+          Container(
+            height: 130,
+            padding: EdgeInsets.only(left: kDefaultPadding * 2),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection('friends')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.lightBlueAccent,
+                    ),
+                  );
+                }
+                final friends = snapshot.data!.docs;
+                List<FriendTile> friendsWidgets = [];
+
+                for (var friend in friends) {
+                  var aguinhaFriend = AguinhaUser(
+                      friend.id, friend['nickname'], friend['suffix']);
+                  friends.indexOf(friend);
+                  friendsWidgets.add(
+                    FriendTile(aguinhaFriend),
+                  );
+                }
+                return GridView.count(
+                  // primary: true,
+                  shrinkWrap: true,
+                  // crossAxisSpacing: 20,
+                  // mainAxisSpacing: 20,
+                  childAspectRatio: 0.4,
+                  // physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  scrollDirection: Axis.horizontal,
+                  children: friendsWidgets,
+                );
+              },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  color: Colors.blue,
-                  child: IconButton(
-                    icon: Icon(Icons.group_add),
-                    padding: EdgeInsets.all(kDefaultPadding),
-                    color: Colors.white,
-                    iconSize: 40.0,
+          ),
+          SizedBox(
+            height: kDefaultPadding * 2,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AddUserScreen.id);
+                    },
+                    icon: Icon(
+                      Icons.person_add,
+                      color: Colors.white,
+                    )),
+              ),
+              SizedBox(
+                width: kDefaultPadding,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, FriendsScreen.id);
                     },
-                  ),
-                )
-              ],
-            ),
-            Column(
-              children: [
-                StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                      .collection('friends')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.lightBlueAccent,
-                        ),
-                      );
-                    }
-                    final friends = snapshot.data!.docs;
-                    List<FriendTile> friendsWidgets = [];
-
-                    for (var friend in friends) {
-                      var aguinhaFriend = AguinhaUser(
-                          friend.id, friend['nickname'], friend['suffix']);
-                      friends.indexOf(friend);
-                      friendsWidgets.add(
-                        FriendTile(
-                            index: friends.indexOf(friend),
-                            friend: aguinhaFriend),
-                      );
-                    }
-                    return Column(
-                      children: friendsWidgets,
-                    );
-                  },
+                    icon: Icon(
+                      Icons.group,
+                      color: Colors.white,
+                    )),
+              ),
+              SizedBox(
+                width: kDefaultPadding,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  shape: BoxShape.circle,
                 ),
-              ],
-            ),
-          ],
-        ));
+                child: IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            final provider = Provider.of<GoogleSignInProvider>(
+                                context,
+                                listen: false);
+                            provider
+                                .logout()
+                                .then((value) => Navigator.pop(context))
+                                .catchError((error) {
+                              Navigator.pop(context);
+                              final snackBar =
+                                  SnackBar(content: Text('algo deu errado'));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            });
+                            return Container(
+                              height: 100,
+                              color: kPrimaryColor,
+                              child: Center(
+                                  child: Text(
+                                'saindo...',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                            );
+                          });
+                    },
+                    icon: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    )),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: kDefaultPadding * 2,
+          )
+        ],
+      ),
+    );
   }
 }
 
-class FriendTile extends StatefulWidget {
-  const FriendTile({
-    Key? key,
-    required this.index,
-    required this.friend,
-  }) : super(key: key);
+class FriendTile extends StatelessWidget {
+  const FriendTile(this.friend);
 
-  final int index;
   final AguinhaUser friend;
 
   @override
-  _FriendTileState createState() => _FriendTileState();
-}
-
-class _FriendTileState extends State<FriendTile> {
-  var loading = false;
-  @override
   Widget build(BuildContext context) {
-    return Slidable(
-      enabled: loading ? false : true,
-      actionPane: SlidableScrollActionPane(),
-      actionExtentRatio: 0.25,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(0))),
-            primary: waterColors[widget.index],
-            onSurface: waterColors[widget.index]),
-        onPressed: loading
-            ? null
-            : () async {
-                setState(() {
-                  loading = true;
-                });
-                HttpsCallable callable =
-                    FirebaseFunctions.instance.httpsCallable('notify');
-                final response = await callable.call({'to': widget.friend.uid});
-                final snackBar = SnackBar(
-                    content: Text('${widget.friend.nickname} foi notificado!'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                setState(() {
-                  loading = false;
-                });
-              },
-        child: Column(
+    return Container(
+      // padding: EdgeInsets.all(kDefaultPadding),
+      child: TextButton(
+        onPressed: () async {
+          await API.notify(friend);
+          final snackBar =
+              SnackBar(content: Text('${friend.nickname} foi notificado'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        },
+        onLongPress: () {},
+        style: TextButton.styleFrom(
+          primary: Colors.blue,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(60),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              // color: Color(0xFF0052F1),
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 30),
-              child: Text(
-                widget.friend.nickname,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold),
+              padding: EdgeInsets.all(kDefaultPadding),
+              decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.circular(40)),
+              child: SvgPicture.asset(
+                'assets/whale_icon.svg',
+                alignment: Alignment.center,
+                // fit: BoxFit.fitHeight,
               ),
             ),
-            if (loading) LinearProgressIndicator()
+            SizedBox(
+              width: kDefaultPadding / 2,
+            ),
+            Text(
+              friend.nickname,
+              style: TextStyle(color: kPrimaryColor),
+            )
           ],
         ),
       ),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: 'Delete',
-          color: Colors.red,
-          icon: Icons.delete,
-          onTap: () {
-            HttpsCallable callable =
-                FirebaseFunctions.instance.httpsCallable('unfriend');
-            callable.call({'uid': widget.friend.uid}).then((response) {
-              final snackBar = SnackBar(
-                  content:
-                      Text('Amizade com${widget.friend.nickname} desfeita!'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            });
-          },
-        ),
-      ],
     );
   }
 }

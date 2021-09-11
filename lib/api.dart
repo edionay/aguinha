@@ -136,4 +136,15 @@ class API {
         FirebaseFunctions.instance.httpsCallable('denyFriendRequest');
     await callable.call({'friendId': requester.uid});
   }
+
+  static Future<void> notify(AguinhaUser friend) async {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('notify');
+    await callable.call({'to': friend.uid});
+  }
+
+  static Future<void> unfriend(AguinhaUser friend) async {
+    HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('unfriend');
+    await callable.call({'uid': friend.uid});
+  }
 }
