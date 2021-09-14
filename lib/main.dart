@@ -70,12 +70,37 @@ Future<void> main() async {
   runApp(AguinhaApp());
 }
 
-class AguinhaApp extends StatelessWidget {
+class AguinhaApp extends StatefulWidget {
   AguinhaApp({Key? key}) : super(key: key);
 
-  final Shader linearGradient = LinearGradient(
-    colors: <Color>[Color(0xff2bd3ff), Color(0xff015afb)],
-  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+  @override
+  _AguinhaAppState createState() => _AguinhaAppState();
+}
+
+class _AguinhaAppState extends State<AguinhaApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        print(notification.title);
+        print(message.notification!.android!.channelId);
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+      // if (notification != null && android != null) {
+      //   final snackBar = SnackBar(
+      //       content: Text('${notification.title} também está bebendo água!'));
+      //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // }
+    });
+  }
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
