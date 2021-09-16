@@ -419,9 +419,12 @@ class _FriendTileState extends State<FriendTile> {
                 if (widget.lastSentNotification != null)
                   Row(
                     children: [
-                      Icon(
-                        Icons.arrow_forward,
-                        size: 10,
+                      Transform.rotate(
+                        angle: 200,
+                        child: Icon(
+                          Icons.arrow_forward,
+                          size: 10,
+                        ),
                       ),
                       Text(
                         '${widget.lastSentNotification!.hour}:${widget.lastSentNotification!.minute}',
@@ -432,9 +435,12 @@ class _FriendTileState extends State<FriendTile> {
                 if (widget.lastReceivedNotification != null)
                   Row(
                     children: [
-                      Icon(
-                        Icons.arrow_back,
-                        size: 10,
+                      Transform.rotate(
+                        angle: 200,
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 10,
+                        ),
                       ),
                       Text(
                         '${widget.lastReceivedNotification!.hour}:${widget.lastReceivedNotification!.minute}',
