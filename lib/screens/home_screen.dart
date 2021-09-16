@@ -119,30 +119,32 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Center(
               child: TextButton(
-                onPressed: () async {
-                  print('Notificar a galera');
-                  setState(() {
-                    notifying = true;
-                  });
+                onPressed: notifying
+                    ? null
+                    : () async {
+                        print('Notificar a galera');
+                        setState(() {
+                          notifying = true;
+                        });
 
-                  List<Future> notifications = [];
-                  try {
-                    for (var friend in friends) {
-                      notifications.add(API.notify(friend));
-                    }
-                    await Future.wait(notifications);
-                    print('deu bom');
-                    setState(() {
-                      notifying = false;
-                    });
-                  } catch (error) {
-                    print(error.toString());
-                    print('deu erro');
-                    setState(() {
-                      notifying = false;
-                    });
-                  }
-                },
+                        List<Future> notifications = [];
+                        try {
+                          for (var friend in friends) {
+                            notifications.add(API.notify(friend));
+                          }
+                          await Future.wait(notifications);
+                          print('deu bom');
+                          setState(() {
+                            notifying = false;
+                          });
+                        } catch (error) {
+                          print(error.toString());
+                          print('deu erro');
+                          setState(() {
+                            notifying = false;
+                          });
+                        }
+                      },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -212,11 +214,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 friends = [];
                 for (var friend in friendsDocuments) {
                   var aguinhaFriend = AguinhaUser(
-                      friend.id, friend['nickname'], friend['suffix']);
+                      friend.id, friend.get('nickname'), friend.get('suffix'));
                   friendsDocuments.indexOf(friend);
+                  DateTime? lastSentNotification;
+                  DateTime? lastReceivedNotification;
+                  DateTime today = DateTime.now();
+                  try {
+                    Timestamp timestamp = friend.get('lastSentNotification');
+                    lastSentNotification = timestamp.toDate();
+                  } catch (error) {}
+                  try {
+                    Timestamp timestamp =
+                        friend.get('lastReceivedNotification');
+                    lastReceivedNotification = timestamp.toDate();
+                  } catch (error) {}
                   friends.add(aguinhaFriend);
                   friendsWidgets.add(
-                    FriendTile(aguinhaFriend, notifying),
+                    FriendTile(
+                        friend: aguinhaFriend,
+                        notifying: notifying,
+                        lastSentNotification: lastSentNotification,
+                        lastReceivedNotification: lastReceivedNotification),
                   );
                 }
                 return GridView.count(
@@ -324,10 +342,16 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class FriendTile extends StatefulWidget {
-  const FriendTile(this.friend, this.notifying);
-  final notifying;
-
+  const FriendTile(
+      {required this.friend,
+      required this.notifying,
+      this.lastSentNotification,
+      this.lastReceivedNotification});
+  final bool notifying;
   final AguinhaUser friend;
+
+  final DateTime? lastSentNotification, lastReceivedNotification;
+
   @override
   _FriendTileState createState() => _FriendTileState();
 }
@@ -351,12 +375,7 @@ class _FriendTileState extends State<FriendTile> {
                   setState(() {
                     disabled = false;
                   });
-                  final snackBar = SnackBar(
-                      content:
-                          Text('${widget.friend.nickname} foi notificado'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } catch (error) {
-                  print(error.toString());
                   setState(() {
                     disabled = false;
                   });
@@ -397,30 +416,32 @@ class _FriendTileState extends State<FriendTile> {
                           ? Colors.grey
                           : kPrimaryColor),
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_forward,
-                      size: 10,
-                    ),
-                    Text(
-                      '22:00',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_back,
-                      size: 10,
-                    ),
-                    Text(
-                      '22:00',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                )
+                if (widget.lastSentNotification != null)
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.arrow_forward,
+                        size: 10,
+                      ),
+                      Text(
+                        '${widget.lastSentNotification!.hour}:${widget.lastSentNotification!.minute}',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  ),
+                if (widget.lastReceivedNotification != null)
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.arrow_back,
+                        size: 10,
+                      ),
+                      Text(
+                        '${widget.lastReceivedNotification!.hour}:${widget.lastReceivedNotification!.minute}',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  )
               ],
             ),
           ],
