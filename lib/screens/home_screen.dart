@@ -324,31 +324,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: IconButton(
                     onPressed: () {
                       showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            final provider = Provider.of<GoogleSignInProvider>(
-                                context,
-                                listen: false);
-                            provider
-                                .logout()
-                                .then((value) => Navigator.pop(context))
-                                .catchError((error) {
-                              Navigator.pop(context);
-                              final snackBar =
-                                  SnackBar(content: Text(error.toString()));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            });
-                            return Container(
-                              height: 100,
-                              color: kPrimaryColor,
-                              child: Center(
-                                  child: Text(
-                                'saindo...',
-                                style: TextStyle(color: Colors.white),
-                              )),
-                            );
+                        context: context,
+                        builder: (context) {
+                          final provider = Provider.of<GoogleSignInProvider>(
+                              context,
+                              listen: false);
+                          provider
+                              .logout()
+                              .then((value) => Navigator.pop(context))
+                              .catchError((error) {
+                            Navigator.pop(context);
+                            final snackBar =
+                                SnackBar(content: Text(error.toString()));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           });
+                          return Container(
+                            height: 100,
+                            color: kPrimaryColor,
+                            child: Center(
+                                child: Text(
+                              'saindo...',
+                              style: TextStyle(color: Colors.white),
+                            )),
+                          );
+                        },
+                      );
                     },
                     icon: Icon(
                       Icons.logout,
@@ -389,6 +390,80 @@ class _FriendTileState extends State<FriendTile> {
     return Container(
       // padding: EdgeInsets.all(kDefaultPadding),
       child: TextButton(
+        onLongPress: disabled || widget.notifying
+            ? null
+            : () async {
+                final bool? unfriend = await showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      color: kPrimaryColor,
+                      child: Column(
+                        children: [
+                          Flexible(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  widget.friend.nickname,
+                                  style: TextStyle(
+                                      color: Color(0xFF7FBFE5), fontSize: 36),
+                                ),
+                                Text(
+                                  '#${widget.friend.suffix}',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      color: Color(0xFFB0D9EF), fontSize: 24),
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: kDefaultPadding * 4,
+                                  vertical: kDefaultPadding * 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              child: Text(
+                                'desfazer amizade',
+                                style: TextStyle(
+                                    color: kPrimaryColor, fontSize: 20),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: kDefaultPadding * 2),
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'voltar',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
+                if (unfriend != null) {
+                  API.unfriend(widget.friend);
+                  final snackBar =
+                      SnackBar(content: Text('desfazendo amizade...'));
+
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
+              },
         onPressed: disabled || widget.notifying
             ? null
             : () async {

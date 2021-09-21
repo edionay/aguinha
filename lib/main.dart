@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
@@ -108,38 +109,44 @@ class _AguinhaAppState extends State<AguinhaApp> {
   }
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => GoogleSignInProvider(),
-        child: MaterialApp(
-          theme: Theme.of(context)
-              .copyWith(textTheme: GoogleFonts.montserratTextTheme()),
-          home: Scaffold(
-            body: StreamBuilder(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasData) {
-                  return HomeScreen();
-                } else if (snapshot.hasError)
-                  return ErrorScreen();
-                else {
-                  return LoginScreen();
-                }
-              },
-            ),
+  Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    return ChangeNotifierProvider(
+      create: (context) => GoogleSignInProvider(),
+      child: MaterialApp(
+        theme: Theme.of(context)
+            .copyWith(textTheme: GoogleFonts.montserratTextTheme()),
+        home: Scaffold(
+          body: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
+                return HomeScreen();
+              } else if (snapshot.hasError)
+                return ErrorScreen();
+              else {
+                return LoginScreen();
+              }
+            },
           ),
-          debugShowCheckedModeBanner: false,
-          routes: {
-            FriendsScreen.id: (context) => FriendsScreen(),
-            AddUserScreen.id: (context) => AddUserScreen(),
-            UsernameScreen.id: (context) => UsernameScreen(),
-            SettingsScreen.id: (context) => SettingsScreen()
-          },
         ),
-      );
+        debugShowCheckedModeBanner: false,
+        routes: {
+          FriendsScreen.id: (context) => FriendsScreen(),
+          AddUserScreen.id: (context) => AddUserScreen(),
+          UsernameScreen.id: (context) => UsernameScreen(),
+          SettingsScreen.id: (context) => SettingsScreen()
+        },
+      ),
+    );
+  }
 }
 
 // class HomeScreen extends StatefulWidget {
