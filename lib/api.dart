@@ -89,37 +89,9 @@ class API {
   }
 
   static Future<void> sendFriendshipRequest(AguinhaUser recipient) async {
-    final senderSnapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-
-    print(senderSnapshot.data());
-
-    final sender = AguinhaUser(senderSnapshot.id,
-        senderSnapshot.get('nickname'), senderSnapshot.get('suffix'));
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(sender.uid)
-        .collection('sentRequests')
-        .doc(recipient.uid)
-        .set({
-      'nickname': recipient.nickname,
-      'suffix': recipient.suffix,
-      'username': recipient.getUsername()
-    });
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(recipient.uid)
-        .collection('receivedRequests')
-        .doc(sender.uid)
-        .set({
-      'nickname': sender.nickname,
-      'suffix': sender.suffix,
-      'username': sender.getUsername()
-    });
+    HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('requestFriendship');
+    await callable.call({'recipientID': recipient.uid});
   }
 
   static Future<void> acceptFriendshipRequest(AguinhaUser requester) async {

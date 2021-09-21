@@ -82,17 +82,21 @@ class _AguinhaAppState extends State<AguinhaApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification!;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
-        print(notification.title);
-        print(message.notification!.android!.channelId);
+        final snackBar = SnackBar(
+            content: Text('${notification.title} também está bebendo água!'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
+      print('cliquei agora');
+
       RemoteNotification notification = message.notification!;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {

@@ -52,12 +52,10 @@ class _UsernameScreenState extends State<UsernameScreen> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Text(
-                    'defina seu nome de usuárimo',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
+                Text(
+                  'defina seu nome de usuário',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(kDefaultPadding * 2),

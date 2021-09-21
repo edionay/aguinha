@@ -112,6 +112,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                   builder: (context) {
                                     return SendRequestModal(friend!);
                                   });
+                              print('chegou aqui');
+                              print('chegou aqui');
                               if (sendRequest != null && sendRequest) {
                                 await API.sendFriendshipRequest(friend!);
                                 setState(() {

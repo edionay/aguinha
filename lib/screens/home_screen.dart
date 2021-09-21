@@ -14,6 +14,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<AguinhaUser> friends = [];
   List<FriendTile> friendsWidgets = [];
   bool notifying = false;
+  String? appVersion;
 
   @override
   void initState() {
@@ -41,6 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
           MaterialPageRoute(builder: (context) => UsernameScreen()),
           (route) => false);
     });
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) => setState(() {
+          appVersion = packageInfo.version;
+        }));
   }
 
   @override
@@ -113,7 +119,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-              )
+              ),
+              if (appVersion != null)
+                Positioned(
+                  bottom: kDefaultPadding * 5,
+                  right: kDefaultPadding,
+                  child: Text(
+                    'versão ${appVersion!}',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                )
             ],
           ),
           Expanded(
