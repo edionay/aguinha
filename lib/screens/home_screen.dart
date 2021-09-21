@@ -431,49 +431,52 @@ class _FriendTileState extends State<FriendTile> {
             SizedBox(
               width: kDefaultPadding / 2,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.friend.nickname,
-                  style: TextStyle(
-                      color: disabled || widget.notifying
-                          ? Colors.grey
-                          : kPrimaryColor),
-                ),
-                if (widget.lastSentNotification != null)
-                  Row(
-                    children: [
-                      Transform.rotate(
-                        angle: 200,
-                        child: Icon(
-                          Icons.arrow_forward,
-                          size: 10,
-                        ),
-                      ),
-                      Text(
-                        '${widget.lastSentNotification!.hour}:${widget.lastSentNotification!.minute}',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ],
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.friend.nickname,
+                    maxLines: 1,
+                    style: TextStyle(
+                        color: disabled || widget.notifying
+                            ? Colors.grey
+                            : kPrimaryColor),
                   ),
-                if (widget.lastReceivedNotification != null)
-                  Row(
-                    children: [
-                      Transform.rotate(
-                        angle: 200,
-                        child: Icon(
-                          Icons.arrow_back,
-                          size: 10,
+                  if (widget.lastSentNotification != null)
+                    Row(
+                      children: [
+                        Transform.rotate(
+                          angle: 200,
+                          child: Icon(
+                            Icons.arrow_forward,
+                            size: 10,
+                          ),
                         ),
-                      ),
-                      Text(
-                        '${widget.lastReceivedNotification!.hour}:${widget.lastReceivedNotification!.minute}',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ],
-                  )
-              ],
+                        Text(
+                          '${widget.lastSentNotification!.hour}:${widget.lastSentNotification!.minute}',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  if (widget.lastReceivedNotification != null)
+                    Row(
+                      children: [
+                        Transform.rotate(
+                          angle: 200,
+                          child: Icon(
+                            Icons.arrow_back,
+                            size: 10,
+                          ),
+                        ),
+                        Text(
+                          '${widget.lastReceivedNotification!.hour}:${widget.lastReceivedNotification!.minute}',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    )
+                ],
+              ),
             ),
           ],
         ),
