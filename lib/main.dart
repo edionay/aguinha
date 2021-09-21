@@ -83,16 +83,6 @@ class _AguinhaAppState extends State<AguinhaApp> {
     // TODO: implement initState
     super.initState();
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification!;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        final snackBar = SnackBar(
-            content: Text('${notification.title} também está bebendo água!'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    });
-
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       print('cliquei agora');
@@ -123,21 +113,23 @@ class _AguinhaAppState extends State<AguinhaApp> {
         child: MaterialApp(
           theme: Theme.of(context)
               .copyWith(textTheme: GoogleFonts.montserratTextTheme()),
-          home: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasData) {
-                return HomeScreen();
-              } else if (snapshot.hasError)
-                return ErrorScreen();
-              else {
-                return LoginScreen();
-              }
-            },
+          home: Scaffold(
+            body: StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasData) {
+                  return HomeScreen();
+                } else if (snapshot.hasError)
+                  return ErrorScreen();
+                else {
+                  return LoginScreen();
+                }
+              },
+            ),
           ),
           debugShowCheckedModeBanner: false,
           routes: {

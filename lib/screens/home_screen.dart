@@ -47,6 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) => setState(() {
           appVersion = packageInfo.version;
         }));
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        final snackBar = SnackBar(
+            content: Text('${notification.title} também está bebendo água!'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
   }
 
   @override
