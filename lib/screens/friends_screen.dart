@@ -6,8 +6,8 @@ import 'package:aguinha/screens/friends_screen/sections/sent_requests_sections.d
 import 'package:aguinha/screens/username_screen.dart';
 import 'package:aguinha/ui/subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'add_friend_screen.dart';
@@ -22,10 +22,9 @@ class FriendsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text('solicitações de amizade'),
-          backgroundColor: Colors.transparent,
+          backgroundColor: kPrimaryColor,
           elevation: 0,
           actions: [
             IconButton(
@@ -41,13 +40,13 @@ class FriendsScreen extends StatelessWidget {
           children: [
             SvgPicture.asset(
               'assets/nav_background.svg',
+              alignment: Alignment.topLeft,
               fit: BoxFit.fitWidth,
             ),
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(
-                  horizontal: kDefaultPadding * 2,
-                  vertical: kDefaultPadding * 4),
+                  horizontal: kDefaultPadding * 2, vertical: kDefaultPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

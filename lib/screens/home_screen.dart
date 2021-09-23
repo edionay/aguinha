@@ -68,300 +68,346 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              SvgPicture.asset(
-                'assets/top_background.svg',
-                fit: BoxFit.cover,
-              ),
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kDefaultPadding * 2,
-                      vertical: kDefaultPadding * 4),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'aguinha',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: kDefaultPadding,
-                      ),
-                      FutureBuilder(
-                          future: API.getCurrentUser(),
-                          builder:
-                              (context, AsyncSnapshot<AguinhaUser> snapshot) {
-                            if (snapshot.hasData) {
-                              final currentUser = snapshot.data;
+    final _size = MediaQuery.of(context).size;
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    currentUser!.nickname,
-                                    style: TextStyle(
-                                        color: Color(0xFF7FBFE5),
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    '#${currentUser.suffix}',
-                                    style: TextStyle(
-                                        color: Color(0xFFB0D9EF),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              );
-                            }
-                            return CircularProgressIndicator();
-                          }),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: _size.height,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        color: kPrimaryColor,
+                        height: 200,
+                        child: SvgPicture.asset(
+                          'assets/main_background.svg',
+                          excludeFromSemantics: true,
+                          fit: BoxFit.fitWidth,
+                          alignment: Alignment.bottomLeft,
+                        ),
+                      ),
+                      SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: kDefaultPadding * 2,
+                              top: kDefaultPadding * 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'aguinha',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 48,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: kDefaultPadding,
+                              ),
+                              FutureBuilder(
+                                  future: API.getCurrentUser(),
+                                  builder: (context,
+                                      AsyncSnapshot<AguinhaUser> snapshot) {
+                                    if (snapshot.hasData) {
+                                      final currentUser = snapshot.data;
+
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            currentUser!.nickname,
+                                            style: TextStyle(
+                                                color: Color(0xFF7FBFE5),
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            '#${currentUser.suffix}',
+                                            style: TextStyle(
+                                                color: Color(0xFFB0D9EF),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                    return CircularProgressIndicator();
+                                  }),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (appVersion != null)
+                        Positioned(
+                          bottom: kDefaultPadding,
+                          right: kDefaultPadding,
+                          child: Text(
+                            'versão ${appVersion!}',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        )
                     ],
                   ),
-                ),
-              ),
-              if (appVersion != null)
-                Positioned(
-                  bottom: kDefaultPadding * 5,
-                  right: kDefaultPadding,
-                  child: Text(
-                    'versão ${appVersion!}',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  Container(
+                    child: SvgPicture.asset(
+                      'assets/nav_background.svg',
+                      excludeFromSemantics: true,
+                      fit: BoxFit.fitWidth,
+                      alignment: Alignment.topLeft,
+                    ),
                   ),
-                )
-            ],
-          ),
-          Expanded(
-            child: Center(
-              child: TextButton(
-                onPressed: notifying
-                    ? null
-                    : () async {
-                        print('Notificar a galera');
-                        setState(() {
-                          notifying = true;
-                        });
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: kDefaultPadding * 4),
+                    child: Center(
+                      child: TextButton(
+                        onPressed: notifying
+                            ? null
+                            : () async {
+                                print('Notificar a galera');
+                                setState(() {
+                                  notifying = true;
+                                });
 
-                        List<Future> notifications = [];
-                        try {
-                          for (var friend in friends) {
-                            notifications.add(API.notify(friend));
-                          }
-                          await Future.wait(notifications);
-                          print('deu bom');
-                          setState(() {
-                            notifying = false;
-                          });
-                        } catch (error) {
-                          print(error.toString());
-                          print('deu erro');
-                          setState(() {
-                            notifying = false;
-                          });
-                        }
-                      },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+                                List<Future> notifications = [];
+                                try {
+                                  for (var friend in friends) {
+                                    notifications.add(API.notify(friend));
+                                  }
+                                  await Future.wait(notifications);
+                                  print('deu bom');
+                                  setState(() {
+                                    notifying = false;
+                                  });
+                                } catch (error) {
+                                  print(error.toString());
+                                  print('deu erro');
+                                  setState(() {
+                                    notifying = false;
+                                  });
+                                }
+                              },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.all(kDefaultPadding),
+                                  child: Icon(
+                                    Icons.local_drink,
+                                    size: 40,
+                                    color:
+                                        notifying ? Colors.grey : kPrimaryColor,
+                                  ),
+                                )),
+                            SizedBox(
+                              width: kDefaultPadding / 2,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'notificar',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: notifying
+                                          ? Colors.grey
+                                          : kPrimaryColor),
+                                ),
+                                Text(
+                                  'todos',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: notifying
+                                          ? Colors.grey
+                                          : kPrimaryColor),
+                                )
+                              ],
+                            )
+                          ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(kDefaultPadding),
-                          child: Icon(
-                            Icons.local_drink,
-                            size: 40,
-                            color: notifying ? Colors.grey : kPrimaryColor,
-                          ),
-                        )),
-                    SizedBox(
-                      width: kDefaultPadding / 2,
+                      ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'notificar',
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: notifying ? Colors.grey : kPrimaryColor),
-                        ),
-                        Text(
-                          'todos',
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: notifying ? Colors.grey : kPrimaryColor),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                left: kDefaultPadding * 2, bottom: kDefaultPadding / 2),
-            child: Subtitle(title: 'amigos'),
-          ),
-          Container(
-            height: 130,
-            padding: EdgeInsets.only(left: kDefaultPadding * 2),
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection('friends')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.lightBlueAccent,
-                    ),
-                  );
-                }
-                final friendsDocuments = snapshot.data!.docs;
-
-                friendsWidgets = [];
-                friends = [];
-                for (var friend in friendsDocuments) {
-                  var aguinhaFriend = AguinhaUser(
-                      friend.id, friend.get('nickname'), friend.get('suffix'));
-                  friendsDocuments.indexOf(friend);
-                  DateTime? lastSentNotification;
-                  DateTime? lastReceivedNotification;
-                  DateTime today = DateTime.now();
-                  try {
-                    Timestamp timestamp = friend.get('lastSentNotification');
-                    lastSentNotification = timestamp.toDate();
-                  } catch (error) {}
-                  try {
-                    Timestamp timestamp =
-                        friend.get('lastReceivedNotification');
-                    lastReceivedNotification = timestamp.toDate();
-                  } catch (error) {}
-                  friends.add(aguinhaFriend);
-                  friendsWidgets.add(
-                    FriendTile(
-                        friend: aguinhaFriend,
-                        notifying: notifying,
-                        lastSentNotification: lastSentNotification,
-                        lastReceivedNotification: lastReceivedNotification),
-                  );
-                }
-                return GridView.count(
-                  // primary: true,
-                  shrinkWrap: true,
-                  // crossAxisSpacing: 20,
-                  // mainAxisSpacing: 20,
-                  childAspectRatio: 0.4,
-                  // physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  scrollDirection: Axis.horizontal,
-                  children: friendsWidgets,
-                );
-              },
-            ),
-          ),
-          SizedBox(
-            height: kDefaultPadding * 2,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, AddUserScreen.id);
-                    },
-                    icon: Icon(
-                      Icons.person_add,
-                      color: Colors.white,
-                    )),
-              ),
-              SizedBox(
-                width: kDefaultPadding,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, FriendsScreen.id);
-                    },
-                    icon: Icon(
-                      Icons.group,
-                      color: Colors.white,
-                    )),
-              ),
-              SizedBox(
-                width: kDefaultPadding,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          final provider = Provider.of<GoogleSignInProvider>(
-                              context,
-                              listen: false);
-                          provider
-                              .logout()
-                              .then((value) => Navigator.pop(context))
-                              .catchError((error) {
-                            Navigator.pop(context);
-                            final snackBar =
-                                SnackBar(content: Text(error.toString()));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          });
-                          return Container(
-                            height: 100,
-                            color: kPrimaryColor,
-                            child: Center(
-                                child: Text(
-                              'saindo...',
-                              style: TextStyle(color: Colors.white),
-                            )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: kDefaultPadding * 2, bottom: kDefaultPadding / 2),
+                    child: Subtitle(title: 'amigos'),
+                  ),
+                  Container(
+                    height: 130,
+                    padding: EdgeInsets.only(left: kDefaultPadding * 2),
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .collection('friends')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.lightBlueAccent,
+                            ),
                           );
-                        },
-                      );
-                    },
-                    icon: Icon(
-                      Icons.logout,
-                      color: Colors.white,
-                    )),
-              ),
+                        }
+                        final friendsDocuments = snapshot.data!.docs;
+
+                        friendsWidgets = [];
+                        friends = [];
+                        for (var friend in friendsDocuments) {
+                          var aguinhaFriend = AguinhaUser(friend.id,
+                              friend.get('nickname'), friend.get('suffix'));
+                          friendsDocuments.indexOf(friend);
+                          DateTime? lastSentNotification;
+                          DateTime? lastReceivedNotification;
+                          DateTime today = DateTime.now();
+                          try {
+                            Timestamp timestamp =
+                                friend.get('lastSentNotification');
+                            lastSentNotification = timestamp.toDate();
+                          } catch (error) {}
+                          try {
+                            Timestamp timestamp =
+                                friend.get('lastReceivedNotification');
+                            lastReceivedNotification = timestamp.toDate();
+                          } catch (error) {}
+                          friends.add(aguinhaFriend);
+                          friendsWidgets.add(
+                            FriendTile(
+                                friend: aguinhaFriend,
+                                notifying: notifying,
+                                lastSentNotification: lastSentNotification,
+                                lastReceivedNotification:
+                                    lastReceivedNotification),
+                          );
+                        }
+                        return GridView.count(
+                          // primary: true,
+                          shrinkWrap: true,
+                          // crossAxisSpacing: 20,
+                          // mainAxisSpacing: 20,
+                          childAspectRatio: 0.4,
+                          // physics: NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          scrollDirection: Axis.horizontal,
+                          children: friendsWidgets,
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: kDefaultPadding * 2,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, AddUserScreen.id);
+                            },
+                            tooltip: 'adicionar amigo',
+                            icon: Icon(
+                              Icons.person_add,
+                              color: Colors.white,
+                            )),
+                      ),
+                      SizedBox(
+                        width: kDefaultPadding,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                            tooltip: 'solicitações de amizade',
+                            onPressed: () {
+                              Navigator.pushNamed(context, FriendsScreen.id);
+                            },
+                            icon: Icon(
+                              Icons.group,
+                              color: Colors.white,
+                            )),
+                      ),
+                      SizedBox(
+                        width: kDefaultPadding,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                            tooltip: 'sair',
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  final provider =
+                                      Provider.of<GoogleSignInProvider>(context,
+                                          listen: false);
+                                  provider
+                                      .logout()
+                                      .then((value) => Navigator.pop(context))
+                                      .catchError((error) {
+                                    Navigator.pop(context);
+                                    final snackBar = SnackBar(
+                                        content: Text(error.toString()));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  });
+                                  return Container(
+                                    height: 100,
+                                    color: kPrimaryColor,
+                                    child: Center(
+                                        child: Text(
+                                      'saindo...',
+                                      style: TextStyle(color: Colors.white),
+                                    )),
+                                  );
+                                },
+                              );
+                            },
+                            icon: Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                            )),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: kDefaultPadding * 2,
+                  ),
+                ],
+              )
             ],
           ),
-          SizedBox(
-            height: kDefaultPadding * 2,
-          )
-        ],
+        ),
       ),
     );
   }
@@ -526,6 +572,7 @@ class _FriendTileState extends State<FriendTile> {
                           child: Icon(
                             Icons.arrow_forward,
                             size: 10,
+                            semanticLabel: 'última notificação enviada',
                           ),
                         ),
                         Text(
@@ -542,6 +589,7 @@ class _FriendTileState extends State<FriendTile> {
                           child: Icon(
                             Icons.arrow_back,
                             size: 10,
+                            semanticLabel: 'última notificação recebida',
                           ),
                         ),
                         Text(

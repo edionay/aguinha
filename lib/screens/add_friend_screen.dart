@@ -28,19 +28,19 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text('adicionar amigo'),
           elevation: 0,
-          backgroundColor: Colors.transparent,
+          backgroundColor: kPrimaryColor,
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
                 'assets/nav_background.svg',
                 fit: BoxFit.fitWidth,
+                alignment: Alignment.topLeft,
               ),
               if (loading)
                 Expanded(child: Center(child: CircularProgressIndicator()))
