@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:aguinha/ad_state.dart';
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
@@ -14,6 +15,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<FriendTile> friendsWidgets = [];
   bool notifying = false;
   String? appVersion;
+  BannerAd? banner;
 
   void launchURL() async {
     final _url =
@@ -43,6 +46,23 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (error) {
       print(error);
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    final adState = Provider.of<AdState>(context);
+    adState.initialization.then((status) {
+      setState(() {
+        banner = BannerAd(
+            size: AdSize.banner,
+            adUnitId: adState.bannerAdUnitId,
+            listener: adState.adListenet,
+            request: AdRequest())
+          ..load();
+      });
+    });
   }
 
   @override
@@ -99,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Container(
                         color: kPrimaryColor,
-                        height: 300,
+                        height: 250,
                         child: SvgPicture.asset(
                           'assets/main_background.svg',
                           excludeFromSemantics: true,
@@ -183,81 +203,76 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: kDefaultPadding * 4),
-                    child: Center(
-                      child: TextButton(
-                        onPressed: notifying
-                            ? null
-                            : () async {
-                                print('Notificar a galera');
-                                setState(() {
-                                  notifying = true;
-                                });
+                  Center(
+                    child: TextButton(
+                      onPressed: notifying
+                          ? null
+                          : () async {
+                              print('Notificar a galera');
+                              setState(() {
+                                notifying = true;
+                              });
 
-                                List<Future> notifications = [];
-                                try {
-                                  for (var friend in friends) {
-                                    notifications.add(API.notify(friend));
-                                  }
-                                  await Future.wait(notifications);
-                                  print('deu bom');
-                                  setState(() {
-                                    notifying = false;
-                                  });
-                                } catch (error) {
-                                  print(error.toString());
-                                  print('deu erro');
-                                  setState(() {
-                                    notifying = false;
-                                  });
+                              List<Future> notifications = [];
+                              try {
+                                for (var friend in friends) {
+                                  notifications.add(API.notify(friend));
                                 }
-                              },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
+                                await Future.wait(notifications);
+                                print('deu bom');
+                                setState(() {
+                                  notifying = false;
+                                });
+                              } catch (error) {
+                                print(error.toString());
+                                print('deu erro');
+                                setState(() {
+                                  notifying = false;
+                                });
+                              }
+                            },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(kDefaultPadding),
+                                child: Icon(
+                                  Icons.local_drink,
+                                  size: 40,
+                                  color:
+                                      notifying ? Colors.grey : kPrimaryColor,
                                 ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.all(kDefaultPadding),
-                                  child: Icon(
-                                    Icons.local_drink,
-                                    size: 40,
-                                    color:
-                                        notifying ? Colors.grey : kPrimaryColor,
-                                  ),
-                                )),
-                            SizedBox(
-                              width: kDefaultPadding / 2,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'notificar',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: notifying
-                                          ? Colors.grey
-                                          : kPrimaryColor),
-                                ),
-                                Text(
-                                  'todos',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: notifying
-                                          ? Colors.grey
-                                          : kPrimaryColor),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
+                              )),
+                          SizedBox(
+                            width: kDefaultPadding / 2,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'notificar',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: notifying
+                                        ? Colors.grey
+                                        : kPrimaryColor),
+                              ),
+                              Text(
+                                'todos',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: notifying
+                                        ? Colors.grey
+                                        : kPrimaryColor),
+                              )
+                            ],
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -434,6 +449,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: kDefaultPadding * 2,
                   ),
+                  if (banner == null)
+                    SizedBox(
+                      height: 50,
+                    )
+                  else
+                    Container(
+                      height: 50,
+                      child: AdWidget(
+                        ad: banner!,
+                      ),
+                    ),
                 ],
               )
             ],

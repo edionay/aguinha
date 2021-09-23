@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aguinha/ad_state.dart';
 import 'package:flutter/services.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/provider.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 const bool USE_EMULATOR = false;
@@ -50,6 +52,8 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final initFuture = MobileAds.instance.initialize();
+  final adState = AdState(initFuture);
 
   if (USE_EMULATOR) {
     _connectToFirebaseEmulator();
@@ -68,7 +72,8 @@ Future<void> main() async {
     sound: true,
   );
 
-  runApp(AguinhaApp());
+  runApp(Provider.value(
+      value: adState, builder: (context, child) => AguinhaApp()));
 }
 
 class AguinhaApp extends StatefulWidget {

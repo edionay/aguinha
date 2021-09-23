@@ -45,6 +45,7 @@ dependencies:
   flutter_svg: ^0.22.0
   package_info_plus: ^1.0.6
   url_launcher: ^6.0.10
+  google_mobile_ads: ^0.13.4
 
 dev_dependencies:
   flutter_test:
