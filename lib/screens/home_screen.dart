@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -31,6 +32,18 @@ class _HomeScreenState extends State<HomeScreen> {
   List<FriendTile> friendsWidgets = [];
   bool notifying = false;
   String? appVersion;
+
+  void launchURL() async {
+    final _url =
+        'mailto:aguinha@edionay.com?subject=Tenho algo a dizer sobre o aguinha&body=';
+    try {
+      await canLaunch(_url)
+          ? await launch(_url)
+          : throw 'Could not launch $_url';
+    } catch (error) {
+      print(error);
+    }
+  }
 
   @override
   void initState() {
@@ -86,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Container(
                         color: kPrimaryColor,
-                        height: 200,
+                        height: 300,
                         child: SvgPicture.asset(
                           'assets/main_background.svg',
                           excludeFromSemantics: true,
@@ -351,6 +364,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             icon: Icon(
                               Icons.group,
+                              color: Colors.white,
+                            )),
+                      ),
+                      SizedBox(
+                        width: kDefaultPadding,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                            onPressed: () {
+                              launchURL();
+                            },
+                            tooltip: 'suporte',
+                            icon: Icon(
+                              Icons.feedback,
                               color: Colors.white,
                             )),
                       ),
