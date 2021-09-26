@@ -13,12 +13,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:aguinha/common.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void launchURL() async {
     final _url =
-        'mailto:aguinha@edionay.com?subject=Tenho algo a dizer sobre o aguinha&body=';
+        'mailto:aguinha@edionay.com?subject=${AppLocalizations.of(context)!.supportMailTitle}&body=';
     try {
       await canLaunch(_url)
           ? await launch(_url)
@@ -205,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           bottom: kDefaultPadding,
                           right: kDefaultPadding,
                           child: Text(
-                            'versão ${appVersion!}',
+                            '${AppLocalizations.of(context)!.version} ${appVersion!}',
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         )
@@ -251,17 +251,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          kDefaultPadding,
-                                                      vertical:
-                                                          kDefaultPadding * 2),
+                                              padding: const EdgeInsets.only(
+                                                  left: kDefaultPadding,
+                                                  right: kDefaultPadding,
+                                                  top: kDefaultPadding * 2,
+                                                  bottom: kDefaultPadding / 2),
                                               child: Text(
-                                                'o que você está tomando?',
+                                                AppLocalizations.of(context)!
+                                                    .whatAreYouDrinking,
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 20),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: kDefaultPadding,
+                                                  right: kDefaultPadding,
+                                                  bottom: kDefaultPadding * 2),
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .drinkSelectionOption,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
                                               ),
                                             ),
                                             GestureDetector(
@@ -272,7 +285,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: DrinkTile(
                                                 icon: Icons.local_drink,
                                                 drink: Drink.water,
-                                                title: 'água',
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .water,
                                                 selected: selectedDrink ==
                                                     Drink.water,
                                               ),
@@ -285,7 +300,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: DrinkTile(
                                                 icon: Icons.local_drink,
                                                 drink: Drink.juice,
-                                                title: 'suco',
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .juice,
                                                 selected: selectedDrink ==
                                                     Drink.juice,
                                               ),
@@ -298,7 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: DrinkTile(
                                                 icon: Icons.local_cafe,
                                                 drink: Drink.juice,
-                                                title: 'café',
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .coffee,
                                                 selected: selectedDrink ==
                                                     Drink.juice,
                                               ),
@@ -311,7 +330,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: DrinkTile(
                                                 icon: Icons.emoji_food_beverage,
                                                 drink: Drink.tea,
-                                                title: 'chá',
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .tea,
                                                 selected:
                                                     selectedDrink == Drink.tea,
                                               ),
@@ -324,7 +345,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: DrinkTile(
                                                 icon: Icons.wine_bar,
                                                 drink: Drink.tea,
-                                                title: 'vinho',
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .wine,
                                                 selected:
                                                     selectedDrink == Drink.tea,
                                               ),
@@ -337,7 +360,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: DrinkTile(
                                                 icon: Icons.sports_bar,
                                                 drink: Drink.tea,
-                                                title: 'cerveja',
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .beer,
                                                 selected:
                                                     selectedDrink == Drink.tea,
                                               ),
@@ -376,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'notificar',
+                                AppLocalizations.of(context)!.notify,
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: notifying
@@ -384,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : kPrimaryColor),
                               ),
                               Text(
-                                'todos',
+                                AppLocalizations.of(context)!.everybody,
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: notifying
@@ -400,7 +425,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.only(
                         left: kDefaultPadding * 2, bottom: kDefaultPadding / 2),
-                    child: Subtitle(title: 'amigos'),
+                    child:
+                        Subtitle(title: AppLocalizations.of(context)!.friends),
                   ),
                   Container(
                     height: 130,
@@ -479,7 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {
                               Navigator.pushNamed(context, AddUserScreen.id);
                             },
-                            tooltip: 'adicionar amigo',
+                            tooltip: AppLocalizations.of(context)!.addFriend,
                             icon: Icon(
                               Icons.person_add,
                               color: Colors.white,
@@ -494,7 +520,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                            tooltip: 'solicitações de amizade',
+                            tooltip:
+                                AppLocalizations.of(context)!.friendsRequests,
                             onPressed: () {
                               Navigator.pushNamed(context, FriendsScreen.id);
                             },
@@ -515,7 +542,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {
                               launchURL();
                             },
-                            tooltip: 'suporte',
+                            tooltip: AppLocalizations.of(context)!.support,
                             icon: Icon(
                               Icons.feedback,
                               color: Colors.white,
@@ -530,7 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                            tooltip: 'sair',
+                            tooltip: AppLocalizations.of(context)!.logout,
                             onPressed: () {
                               showModalBottomSheet(
                                 context: context,
@@ -634,7 +661,7 @@ class DrinkTile extends StatelessWidget {
                     color: selected ? kPrimaryColor : Colors.white,
                     borderRadius: BorderRadius.circular(40)),
                 child: Text(
-                  'em breve',
+                  AppLocalizations.of(context)!.soon,
                   style: TextStyle(
                       color: selected ? Colors.white : kPrimaryColor,
                       fontSize: 10),

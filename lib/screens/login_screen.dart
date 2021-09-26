@@ -1,8 +1,8 @@
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/provider.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:aguinha/common.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'bem-vindo ao',
+                          AppLocalizations.of(context)!.welcomeTo,
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         Text(
@@ -64,7 +64,7 @@ class LoginScreen extends StatelessWidget {
                               width: kDefaultPadding,
                             ),
                             Text(
-                              'Entrar com o Google',
+                              '${AppLocalizations.of(context)!.signInWith} Google',
                               style: TextStyle(color: kPrimaryColor),
                             ),
                           ],

@@ -1,28 +1,24 @@
 import 'dart:io';
 
 import 'package:aguinha/ad_state.dart';
-import 'package:flutter/services.dart';
-import 'package:aguinha/api.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
 import 'package:aguinha/screens/error_screen.dart';
 import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
-import 'package:aguinha/screens/loading_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
 import 'package:aguinha/screens/settings_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'common.dart';
 
 const bool USE_EMULATOR = false;
 
@@ -122,6 +118,12 @@ class _AguinhaAppState extends State<AguinhaApp> {
     return ChangeNotifierProvider(
       create: (context) => GoogleSignInProvider(),
       child: MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          AppLocalizations.delegate
+        ],
+        supportedLocales: [const Locale('en', ''), const Locale('pt', '')],
         theme: Theme.of(context)
             .copyWith(textTheme: GoogleFonts.montserratTextTheme()),
         home: Scaffold(

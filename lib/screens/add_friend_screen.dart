@@ -1,5 +1,6 @@
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
+import 'package:aguinha/common.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/friends_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('adicionar amigo'),
+          title: Text(AppLocalizations.of(context)!.addFriend),
           elevation: 0,
           backgroundColor: kPrimaryColor,
         ),
@@ -56,7 +57,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'insira o nome de usuário do seu amigo',
+                                AppLocalizations.of(context)!
+                                    .typeYourFriendsUsername,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 20,
@@ -67,7 +69,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                 height: kDefaultPadding,
                               ),
                               Text(
-                                'esse nome pode ser encontrado na tela ininicial do aplicativo',
+                                AppLocalizations.of(context)!
+                                    .thisUsernameCanBeFoundAtHomeScreen,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: kPrimaryColor,
@@ -79,8 +82,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
                               TextField(
                                 // autofocus: true,
                                 textAlign: TextAlign.center,
-                                decoration:
-                                    InputDecoration(hintText: 'EXEMPLO#3325'),
+                                decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!
+                                        .usernameExample),
                                 textCapitalization:
                                     TextCapitalization.characters,
                                 textInputAction: TextInputAction.search,
@@ -112,8 +116,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                   builder: (context) {
                                     return SendRequestModal(friend!);
                                   });
-                              print('chegou aqui');
-                              print('chegou aqui');
                               if (sendRequest != null && sendRequest) {
                                 await API.sendFriendshipRequest(friend!);
                                 setState(() {
@@ -123,13 +125,15 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                 });
                                 final snackBar = SnackBar(
                                     action: SnackBarAction(
-                                      label: 'ver solicitações',
+                                      label: AppLocalizations.of(context)!
+                                          .goToRequests,
                                       onPressed: () {
                                         Navigator.pushNamed(
                                             context, FriendsScreen.id);
                                       },
                                     ),
-                                    content: Text('solicitação enviada'));
+                                    content: Text(AppLocalizations.of(context)!
+                                        .requestSent));
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               } else
@@ -158,7 +162,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                 borderRadius: BorderRadius.circular(20.0),
                                 border: Border.all(color: kPrimaryColor)),
                             child: Text(
-                              'buscar',
+                              AppLocalizations.of(context)!.search,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),

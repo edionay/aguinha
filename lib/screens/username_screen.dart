@@ -2,9 +2,9 @@ import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:aguinha/common.dart';
 
 class UsernameScreen extends StatefulWidget {
   const UsernameScreen({Key? key}) : super(key: key);
@@ -53,14 +53,14 @@ class _UsernameScreenState extends State<UsernameScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'defina seu nome de usuário',
+                  AppLocalizations.of(context)!.setYourUsername,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(kDefaultPadding * 2),
                   child: Text(
-                    'O nome escolhido será utilizado nas buscas e exibido para seus amigos',
+                    AppLocalizations.of(context)!.setUsernameTip,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Color(0xFFB0D9EF)),
                   ),
@@ -117,8 +117,9 @@ class _UsernameScreenState extends State<UsernameScreen> {
                     try {
                       print(nickname.length);
                       if (nickname.length < 3) {
-                        final snackBar =
-                            SnackBar(content: Text('nome curto demais'));
+                        final snackBar = SnackBar(
+                            content: Text(AppLocalizations.of(context)!
+                                .shortUsernameInfo));
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       } else {
                         if (nickname.length > 10) {
@@ -138,7 +139,8 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'o seguinte nome será definido:',
+                                      AppLocalizations.of(context)!
+                                          .chosenUsernameInfo,
                                       style: kModalTitleStyle,
                                     ),
                                     SizedBox(
@@ -171,7 +173,8 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                                   border: Border.all(
                                                       color: Colors.white)),
                                               child: Text(
-                                                'alterar',
+                                                AppLocalizations.of(context)!
+                                                    .modify,
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               )),
@@ -191,7 +194,8 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                                 border: Border.all(
                                                     color: kPrimaryColor)),
                                             child: Text(
-                                              'continuar',
+                                              AppLocalizations.of(context)!
+                                                  .continueButton,
                                               style: TextStyle(
                                                   color: kPrimaryColor,
                                                   fontWeight: FontWeight.bold),
@@ -225,8 +229,8 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                 loading = false;
                               });
                               final snackBar = SnackBar(
-                                  content: Text(
-                                      'não foi possível realizar essa operação'));
+                                  content: Text(AppLocalizations.of(context)!
+                                      .unknownError));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             }
@@ -257,7 +261,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                         borderRadius: BorderRadius.circular(20.0),
                         border: Border.all(color: kPrimaryColor)),
                     child: Text(
-                      'continuar',
+                      AppLocalizations.of(context)!.continueButton,
                       style: TextStyle(
                           color: kPrimaryColor, fontWeight: FontWeight.bold),
                     ),
