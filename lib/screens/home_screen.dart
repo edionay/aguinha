@@ -53,10 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> notifyAll(List<AguinhaUser> friends) async {
     List<Future> notifications = [];
     try {
-      // for (var friend in friends) {
-      //   notifications.add(API.notify(friend));
-      // }
-      // await Future.wait(notifications);
+      for (var friend in friends) {
+        notifications.add(API.notify(friend));
+      }
+      await Future.wait(notifications);
       setState(() {
         notifying = false;
       });
