@@ -36,5 +36,16 @@
   "continueButton": "continue",
   "chosenUsernameInfo": "the following username will be set:",
   "supportMailTitle": "i have something to say about aguinha",
-  "isDrinkingWaterAsWell": "is drinking water as well"
+  "isDrinkingWaterAsWell": "is drinking water as well",
+  "noRequest": "no request",
+  "received": "received",
+  "sent": "sent",
+  "acceptFriendRequest": "accept frient request?",
+  "yes": "yes",
+  "no": "no",
+  "acceptingRequest": "accepting request...",
+  "deleteFriendRequest": "delete friend request?",
+  "cancel": "cancel",
+  "delete": "delete",
+  "deletingRequest": "deleting request..."
 }

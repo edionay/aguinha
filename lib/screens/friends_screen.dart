@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'add_friend_screen.dart';
+import 'package:aguinha/common.dart';
 import 'error_screen.dart';
 import 'login_screen.dart';
 
@@ -23,7 +24,7 @@ class FriendsScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('solicitações de amizade'),
+          title: Text(AppLocalizations.of(context)!.friendsRequests),
           backgroundColor: kPrimaryColor,
           elevation: 0,
           actions: [
@@ -50,7 +51,7 @@ class FriendsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Subtitle(title: 'recebidas'),
+                  Subtitle(title: AppLocalizations.of(context)!.received),
                   SizedBox(
                     height: kDefaultPadding,
                   ),
@@ -92,7 +93,7 @@ class FriendsScreen extends StatelessWidget {
                   SizedBox(
                     height: kDefaultPadding * 3,
                   ),
-                  Subtitle(title: 'enviadas'),
+                  Subtitle(title: AppLocalizations.of(context)!.sent),
                   SizedBox(
                     height: kDefaultPadding,
                   ),
@@ -231,7 +232,7 @@ class ReceivedRequestTile extends StatelessWidget {
             await API.acceptFriendshipRequest(requester);
           } catch (error) {
             final errorSnackBar = SnackBar(
-                content: Text('não foi possível aceitar a solicitação'));
+                content: Text(AppLocalizations.of(context)!.unknownError));
             ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
           }
         }

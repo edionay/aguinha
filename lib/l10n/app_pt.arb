@@ -33,5 +33,16 @@
   "continueButton": "continuar",
   "chosenUsernameInfo": "o seguinte nome será definido:",
   "supportMailTitle": "tenho algo a dizer sobre o aguinha",
-  "isDrinkingWaterAsWell": "também está bebendo água"
+  "isDrinkingWaterAsWell": "também está bebendo água",
+  "noRequest": "nenhuma solicitação",
+  "received": "recebidas",
+  "sent": "enviadas",
+  "acceptFriendRequest": "aceitar solicitação de amizade?",
+  "yes": "sim",
+  "no": "não",
+  "acceptingRequest": "aceitando solicitação...",
+  "deleteFriendRequest": "excluir solicitação de amizade?",
+  "cancel": "cancelar",
+  "delete": "excluir",
+  "deletingRequest": "excluindo solicitção..."
 }
