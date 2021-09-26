@@ -27,6 +27,7 @@ class FriendsScreen extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.friendsRequests),
           backgroundColor: kPrimaryColor,
           elevation: 0,
+          shape: Border.all(width: 0, color: kPrimaryColor),
           actions: [
             IconButton(
               icon: Icon(Icons.person_add),

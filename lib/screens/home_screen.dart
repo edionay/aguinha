@@ -139,8 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Stack(
                     children: [
                       Container(
-                        color: kPrimaryColor,
                         height: 250,
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                        ),
                         child: SvgPicture.asset(
                           'assets/main_background.svg',
                           excludeFromSemantics: true,
@@ -211,13 +213,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                     ],
                   ),
-                  Container(
-                    child: SvgPicture.asset(
-                      'assets/nav_background.svg',
-                      excludeFromSemantics: true,
-                      fit: BoxFit.fitWidth,
-                      alignment: Alignment.topLeft,
-                    ),
+                  SvgPicture.asset(
+                    'assets/nav_background.svg',
+                    excludeFromSemantics: true,
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topLeft,
                   ),
                 ],
               ),
