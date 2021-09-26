@@ -36,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? appVersion;
   BannerAd? banner;
 
+  Drink selectedDrink = Drink.water;
+
   void launchURL() async {
     final _url =
         'mailto:aguinha@edionay.com?subject=Tenho algo a dizer sobre o aguinha&body=';
@@ -45,6 +47,25 @@ class _HomeScreenState extends State<HomeScreen> {
           : throw 'Could not launch $_url';
     } catch (error) {
       print(error);
+    }
+  }
+
+  Future<void> notifyAll(List<AguinhaUser> friends) async {
+    List<Future> notifications = [];
+    try {
+      // for (var friend in friends) {
+      //   notifications.add(API.notify(friend));
+      // }
+      // await Future.wait(notifications);
+      setState(() {
+        notifying = false;
+      });
+    } catch (error) {
+      print(error.toString());
+      print('deu erro');
+      setState(() {
+        notifying = false;
+      });
     }
   }
 
@@ -208,32 +229,132 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: notifying
                           ? null
                           : () async {
-                              print('Notificar a galera');
                               setState(() {
                                 notifying = true;
                               });
 
-                              List<Future> notifications = [];
-                              try {
-                                for (var friend in friends) {
-                                  notifications.add(API.notify(friend));
-                                }
-                                await Future.wait(notifications);
-                                print('deu bom');
-                                setState(() {
-                                  notifying = false;
-                                });
-                              } catch (error) {
-                                print(error.toString());
-                                print('deu erro');
-                                setState(() {
-                                  notifying = false;
-                                });
-                              }
+                              await notifyAll(friends);
                             },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          IconButton(
+                              onPressed: () async {
+                                final drink = await showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      color: kPrimaryColor,
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          kDefaultPadding,
+                                                      vertical:
+                                                          kDefaultPadding * 2),
+                                              child: Text(
+                                                'o que você está tomando?',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(
+                                                    context, Drink.water);
+                                              },
+                                              child: DrinkTile(
+                                                icon: Icons.local_drink,
+                                                drink: Drink.water,
+                                                title: 'água',
+                                                selected: selectedDrink ==
+                                                    Drink.water,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(
+                                                    context, Drink.juice);
+                                              },
+                                              child: DrinkTile(
+                                                icon: Icons.local_drink,
+                                                drink: Drink.juice,
+                                                title: 'suco',
+                                                selected: selectedDrink ==
+                                                    Drink.juice,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(
+                                                    context, Drink.juice);
+                                              },
+                                              child: DrinkTile(
+                                                icon: Icons.local_cafe,
+                                                drink: Drink.juice,
+                                                title: 'café',
+                                                selected: selectedDrink ==
+                                                    Drink.juice,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(
+                                                    context, Drink.tea);
+                                              },
+                                              child: DrinkTile(
+                                                icon: Icons.emoji_food_beverage,
+                                                drink: Drink.tea,
+                                                title: 'chá',
+                                                selected:
+                                                    selectedDrink == Drink.tea,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(
+                                                    context, Drink.tea);
+                                              },
+                                              child: DrinkTile(
+                                                icon: Icons.wine_bar,
+                                                drink: Drink.tea,
+                                                title: 'vinho',
+                                                selected:
+                                                    selectedDrink == Drink.tea,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(
+                                                    context, Drink.tea);
+                                              },
+                                              child: DrinkTile(
+                                                icon: Icons.sports_bar,
+                                                drink: Drink.tea,
+                                                title: 'cerveja',
+                                                selected:
+                                                    selectedDrink == Drink.tea,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                                // if (drink != null) {
+                                //   setState(() {
+                                //     selectedDrink = drink;
+                                //   });
+                                // }
+                              },
+                              icon: Icon(Icons.arrow_drop_down)),
                           Card(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),
@@ -470,6 +591,67 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class DrinkTile extends StatelessWidget {
+  const DrinkTile(
+      {required this.drink,
+      required this.title,
+      required this.selected,
+      required this.icon});
+
+  final Drink drink;
+  final bool selected;
+  final String title;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          color: selected ? Colors.white : kPrimaryColor,
+          borderRadius: BorderRadius.circular(40)),
+      margin: EdgeInsets.only(
+          bottom: kDefaultPadding * 2,
+          left: kDefaultPadding * 2,
+          right: kDefaultPadding * 2),
+      child: ListTile(
+        enabled: false,
+        leading: CircleAvatar(
+          child: Icon(
+            icon,
+            color: selected ? Colors.white : kPrimaryColor,
+          ),
+          backgroundColor: selected ? kPrimaryColor : Colors.white,
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (drink != Drink.water)
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: kDefaultPadding, vertical: kDefaultPadding / 2),
+                decoration: BoxDecoration(
+                    color: selected ? kPrimaryColor : Colors.white,
+                    borderRadius: BorderRadius.circular(40)),
+                child: Text(
+                  'em breve',
+                  style: TextStyle(
+                      color: selected ? Colors.white : kPrimaryColor,
+                      fontSize: 10),
+                ),
+              ),
+          ],
+        ),
+        title: Text(
+          title,
+          style: TextStyle(color: selected ? kPrimaryColor : Colors.white),
+        ),
+        onTap: () {},
+      ),
+    );
+  }
+}
+
 class FriendTile extends StatefulWidget {
   const FriendTile(
       {required this.friend,
@@ -491,7 +673,6 @@ class _FriendTileState extends State<FriendTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // padding: EdgeInsets.all(kDefaultPadding),
       child: TextButton(
         onLongPress: disabled || widget.notifying
             ? null
@@ -663,4 +844,11 @@ class _FriendTileState extends State<FriendTile> {
       ),
     );
   }
+}
+
+enum Drink {
+  water,
+  juice,
+  milk,
+  tea,
 }
