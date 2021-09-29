@@ -46,5 +46,7 @@
   "deleteFriendRequest": "excluir solicitação de amizade?",
   "cancel": "cancelar",
   "delete": "excluir",
-  "deletingRequest": "excluindo solicitção..."
+  "deletingRequest": "excluindo solicitção...",
+  "copyUsername": "copiar nome de usuário",
+  "usernameCopied": "nome de usuário copiado para a área de transferência"
 }

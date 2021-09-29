@@ -3,7 +3,7 @@ class AguinhaUser {
   String nickname;
   String suffix;
 
-  AguinhaUser(this.uid, this.nickname, this.suffix);
+  String get username => '$nickname#$suffix';
 
-  getUsername() => '$nickname#$suffix';
+  AguinhaUser(this.uid, this.nickname, this.suffix);
 }

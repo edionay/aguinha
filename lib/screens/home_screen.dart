@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -165,24 +166,63 @@ class _HomeScreenState extends State<HomeScreen> {
                                     if (snapshot.hasData) {
                                       final currentUser = snapshot.data;
 
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      return Row(
                                         children: [
-                                          Text(
-                                            currentUser!.nickname,
-                                            style: TextStyle(
-                                                color: Color(0xFF7FBFE5),
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                currentUser!.nickname,
+                                                style: TextStyle(
+                                                    color: Color(0xFF7FBFE5),
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                '#${currentUser.suffix}',
+                                                style: TextStyle(
+                                                    color: Color(0xFFB0D9EF),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            '#${currentUser.suffix}',
-                                            style: TextStyle(
-                                                color: Color(0xFFB0D9EF),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                          TextButton(
+                                            child: Icon(
+                                              Icons.copy,
+                                              color: Colors.white,
+                                              semanticLabel:
+                                                  AppLocalizations.of(context)!
+                                                      .copyUsername,
+                                            ),
+                                            onPressed: () async {
+                                              try {
+                                                Clipboard.setData(ClipboardData(
+                                                    text:
+                                                        currentUser.username));
+                                                final snackBar = SnackBar(
+                                                  content: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .usernameCopied),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              } catch (error) {
+                                                final snackBar = SnackBar(
+                                                  content: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .unknownError),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              }
+                                            },
+                                          )
                                         ],
                                       );
                                     }

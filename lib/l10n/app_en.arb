@@ -49,5 +49,7 @@
   "deleteFriendRequest": "delete friend request?",
   "cancel": "cancel",
   "delete": "delete",
-  "deletingRequest": "deleting request..."
+  "deletingRequest": "deleting request...",
+  "copyUsername": "copy username",
+  "usernameCopied": "username copied to clipboard"
 }
