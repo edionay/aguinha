@@ -9,6 +9,7 @@
   "signInWith": "sign in with",
   "notify": "notify",
   "everybody": "everybody",
+  "notifyAgainAlert": "wait a while before notifying again",
   "friendsRequests": "friends requests",
   "support": "support",
   "logout": "logout",

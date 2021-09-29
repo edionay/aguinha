@@ -17,6 +17,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:aguinha/common.dart';
 
@@ -62,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (error) {
       print(error.toString());
-      print('deu erro');
       setState(() {
         notifying = false;
       });
@@ -232,8 +232,29 @@ class _HomeScreenState extends State<HomeScreen> {
                               setState(() {
                                 notifying = true;
                               });
+                              final SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              final lastNotify = prefs.getInt('lastNotify') ??
+                                  DateTime.now().millisecondsSinceEpoch -
+                                      360000;
+                              print(DateTime.now().millisecondsSinceEpoch -
+                                  lastNotify);
 
-                              await notifyAll(friends);
+                              if (DateTime.now().millisecondsSinceEpoch -
+                                      lastNotify <
+                                  300000) {
+                                final snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!
+                                      .notifyAgainAlert),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else {
+                                await notifyAll(friends);
+
+                                await prefs.setInt('lastNotify',
+                                    DateTime.now().millisecondsSinceEpoch);
+                              }
                             },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
