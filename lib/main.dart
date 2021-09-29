@@ -22,7 +22,7 @@ import 'package:provider/provider.dart';
 import 'api.dart';
 import 'common.dart';
 
-const bool USE_EMULATOR = true;
+const bool USE_EMULATOR = false;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';

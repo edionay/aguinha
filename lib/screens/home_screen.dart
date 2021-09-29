@@ -53,20 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> notifyAll(List<AguinhaUser> friends) async {
     List<Future> notifications = [];
-    try {
-      for (var friend in friends) {
-        notifications.add(API.notify(friend));
-      }
-      await Future.wait(notifications);
-      setState(() {
-        notifying = false;
-      });
-    } catch (error) {
-      print(error.toString());
-      setState(() {
-        notifying = false;
-      });
+    for (var friend in friends) {
+      notifications.add(API.notify(friend));
     }
+    await Future.wait(notifications);
   }
 
   @override
@@ -234,11 +224,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               });
                               final SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
+
                               final lastNotify = prefs.getInt('lastNotify') ??
                                   DateTime.now().millisecondsSinceEpoch -
-                                      360000;
-                              print(DateTime.now().millisecondsSinceEpoch -
-                                  lastNotify);
+                                      900000;
 
                               if (DateTime.now().millisecondsSinceEpoch -
                                       lastNotify <
@@ -250,11 +239,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               } else {
-                                await notifyAll(friends);
-
-                                await prefs.setInt('lastNotify',
-                                    DateTime.now().millisecondsSinceEpoch);
+                                try {
+                                  await notifyAll(friends);
+                                  final snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .successfulNotifyAlert),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                  await prefs.setInt('lastNotify',
+                                      DateTime.now().millisecondsSinceEpoch);
+                                } catch (error) {
+                                  final snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .unknownError),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
                               }
+                              setState(() {
+                                notifying = false;
+                              });
                             },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -808,6 +814,7 @@ class _FriendTileState extends State<FriendTile> {
                     disabled = false;
                   });
                 } catch (error) {
+                  print(error);
                   setState(() {
                     disabled = false;
                   });

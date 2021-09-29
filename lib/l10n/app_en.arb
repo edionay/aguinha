@@ -10,6 +10,7 @@
   "notify": "notify",
   "everybody": "everybody",
   "notifyAgainAlert": "wait a while before notifying again",
+  "successfulNotifyAlert": "all your friends were notified",
   "friendsRequests": "friends requests",
   "support": "support",
   "logout": "logout",
