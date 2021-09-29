@@ -9,6 +9,7 @@ import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
 import 'package:aguinha/screens/settings_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,9 +19,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'api.dart';
 import 'common.dart';
 
-const bool USE_EMULATOR = false;
+const bool USE_EMULATOR = true;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
@@ -106,6 +108,22 @@ class _AguinhaAppState extends State<AguinhaApp> {
               );
             });
       }
+    });
+
+    API.getCurrentUser().then((currentUser) {
+      print('updating token');
+      FirebaseMessaging.instance.getToken().then((fmcToken) {
+        final ref = FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('tokens')
+            .doc(fmcToken);
+        ref.set({
+          'token': fmcToken,
+          'created': FieldValue.serverTimestamp(),
+          'platform': Platform.operatingSystem
+        });
+      });
     });
   }
 
