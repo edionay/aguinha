@@ -22,6 +22,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:aguinha/common.dart';
 
+import 'home_screen/bottom_menu_section.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -39,18 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   BannerAd? banner;
 
   Drink selectedDrink = Drink.water;
-
-  void launchURL() async {
-    final _url =
-        'mailto:aguinha@edionay.com?subject=${AppLocalizations.of(context)!.supportMailTitle}&body=';
-    try {
-      await canLaunch(_url)
-          ? await launch(_url)
-          : throw 'Could not launch $_url';
-    } catch (error) {
-      print(error);
-    }
-  }
 
   Future<void> notifyAll(List<AguinhaUser> friends) async {
     List<Future> notifications = [];
@@ -560,110 +550,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: kDefaultPadding * 2,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, AddUserScreen.id);
-                            },
-                            tooltip: AppLocalizations.of(context)!.addFriend,
-                            icon: Icon(
-                              Icons.person_add,
-                              color: Colors.white,
-                            )),
-                      ),
-                      SizedBox(
-                        width: kDefaultPadding,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                            tooltip:
-                                AppLocalizations.of(context)!.friendsRequests,
-                            onPressed: () {
-                              Navigator.pushNamed(context, FriendsScreen.id);
-                            },
-                            icon: Icon(
-                              Icons.group,
-                              color: Colors.white,
-                            )),
-                      ),
-                      SizedBox(
-                        width: kDefaultPadding,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                            onPressed: () {
-                              launchURL();
-                            },
-                            tooltip: AppLocalizations.of(context)!.support,
-                            icon: Icon(
-                              Icons.feedback,
-                              color: Colors.white,
-                            )),
-                      ),
-                      SizedBox(
-                        width: kDefaultPadding,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                            tooltip: AppLocalizations.of(context)!.logout,
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  final provider =
-                                      Provider.of<GoogleSignInProvider>(context,
-                                          listen: false);
-                                  provider
-                                      .logout()
-                                      .then((value) => Navigator.pop(context))
-                                      .catchError((error) {
-                                    Navigator.pop(context);
-                                    final snackBar = SnackBar(
-                                        content: Text(error.toString()));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  });
-                                  return Container(
-                                    height: 100,
-                                    color: kPrimaryColor,
-                                    child: Center(
-                                        child: Text(
-                                      'saindo...',
-                                      style: TextStyle(color: Colors.white),
-                                    )),
-                                  );
-                                },
-                              );
-                            },
-                            icon: Icon(
-                              Icons.logout,
-                              color: Colors.white,
-                            )),
-                      ),
-                    ],
-                  ),
                   SizedBox(
                     height: kDefaultPadding * 2,
                   ),
+                  BottomMenuSection(),
                   if (banner == null)
                     SizedBox(
                       height: 50,
