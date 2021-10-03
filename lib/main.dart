@@ -173,37 +173,3 @@ class _AguinhaAppState extends State<AguinhaApp> {
     );
   }
 }
-
-// class HomeScreen extends StatefulWidget {
-//   const HomeScreen({Key? key}) : super(key: key);
-//
-//   @override
-//   _HomeScreenState createState() => _HomeScreenState();
-// }
-//
-// class _HomeScreenState extends State<HomeScreen> {
-//   @override
-//   void initState() {
-//
-//     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-//       print('A new onMessageOpenedApp event was published!');
-//       RemoteNotification notification = message.notification!;
-//       AndroidNotification? android = message.notification?.android;
-//       if (notification != null && android != null) {
-//         showDialog(
-//             context: context,
-//             builder: (_) {
-//               return AlertDialog(
-//                 title: Text(notification.title!),
-//                 content: SingleChildScrollView(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [Text(notification.body!)],
-//                   ),
-//                 ),
-//               );
-//             });
-//       }
-//     });
-//     FirebaseMessaging.instance.getToken().then((value) => print(value));
-//   }
