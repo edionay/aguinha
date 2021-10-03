@@ -51,5 +51,9 @@
   "delete": "delete",
   "deletingRequest": "deleting request...",
   "copyUsername": "copy username",
-  "usernameCopied": "username copied to clipboard"
+  "usernameCopied": "username copied to clipboard",
+  "settings": "settings",
+  "language": "language",
+  "languageHint": "set the language for incoming notifications"
+
 }

@@ -3,6 +3,7 @@ import 'package:aguinha/constants.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
 import 'package:aguinha/screens/friends_screen.dart';
+import 'package:aguinha/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -47,7 +48,8 @@ class BottomMenuSection extends StatelessWidget {
           icon: Icons.feedback,
           label: AppLocalizations.of(context)!.support,
           onPress: () {
-            launchURL();
+            // launchURL();
+            Navigator.pushNamed(context, SettingsScreen.id);
           },
         ),
         BottomMenuButton(

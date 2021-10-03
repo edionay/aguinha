@@ -34,6 +34,17 @@ class GoogleSignInProvider extends ChangeNotifier {
 
       final fmcToken = await FirebaseMessaging.instance.getToken();
 
+      String locale = 'en_US';
+      final String defaultLocale = Platform.localeName;
+      if (supportedLanguages.contains(defaultLocale)) locale = defaultLocale;
+
+      print(defaultLocale);
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userr.uid)
+          .update({'locale': locale});
+
       final ref = FirebaseFirestore.instance
           .collection('users')
           .doc(userr.uid)
@@ -58,3 +69,5 @@ class GoogleSignInProvider extends ChangeNotifier {
     await FirebaseAuth.instance.signOut();
   }
 }
+
+const supportedLanguages = ['pt_BR', 'en_US'];

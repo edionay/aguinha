@@ -88,6 +88,33 @@ class API {
       throw 'Usuário não encontrado';
   }
 
+  static Future<String> getCurrentUserLocale() async {
+    final usersSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    if (usersSnapshot.exists) {
+      try {
+        return usersSnapshot.get('locale');
+      } catch (error) {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({'locale': 'pt_BR'});
+        return 'pt_BR';
+      }
+    } else
+      throw 'Usuário não encontrado';
+  }
+
+  static Future<void> setCurrentUserLocale(String locale) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({'locale': locale});
+  }
+
   static Future<void> sendFriendshipRequest(AguinhaUser recipient) async {
     HttpsCallable callable =
         FirebaseFunctions.instance.httpsCallable('requestFriendship');
