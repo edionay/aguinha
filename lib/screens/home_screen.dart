@@ -80,6 +80,28 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          Builder(
+            builder: (context) => TextButton(
+              child: Row(
+                children: [
+                  Text(
+                    'MENU',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(
+                    width: kDefaultPadding / 2,
+                  ),
+                  Icon(
+                    Icons.menu_rounded,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
+          ),
+        ],
       ),
       extendBodyBehindAppBar: true,
       endDrawer: Drawer(

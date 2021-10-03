@@ -108,6 +108,12 @@ class _FriendTileState extends State<FriendTile> {
                 });
                 try {
                   await API.notify(widget.friend);
+
+                  final snackBar = SnackBar(
+                      content: Text(
+                          '${AppLocalizations.of(context)!.notifying} ${widget.friend.nickname}'));
+
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   setState(() {
                     disabled = false;
                   });

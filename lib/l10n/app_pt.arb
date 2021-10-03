@@ -51,5 +51,6 @@
   "usernameCopied": "nome de usuário copiado para a área de transferência",
   "settings": "configurações",
   "language": "idioma",
-  "languageHint": "escolha o idioma para notificações recebidas"
+  "languageHint": "escolha o idioma para notificações recebidas",
+  "notifying": "notificando"
 }

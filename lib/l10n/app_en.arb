@@ -54,6 +54,6 @@
   "usernameCopied": "username copied to clipboard",
   "settings": "settings",
   "language": "language",
-  "languageHint": "set the language for incoming notifications"
-
+  "languageHint": "set the language for incoming notifications",
+  "notifying": "notifying"
 }

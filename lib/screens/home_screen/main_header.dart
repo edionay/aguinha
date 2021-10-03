@@ -15,11 +15,12 @@ class MainHeader extends StatelessWidget {
     final _size = MediaQuery.of(context).size;
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Stack(
           children: [
             Container(
-              height: _size.height * 0.25,
+              height: _size.height * 0.4,
               decoration: BoxDecoration(
                 color: kPrimaryColor,
               ),
@@ -33,7 +34,7 @@ class MainHeader extends StatelessWidget {
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(
-                    left: kDefaultPadding * 2, top: kDefaultPadding * 4),
+                    left: kDefaultPadding * 2, top: kDefaultPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
