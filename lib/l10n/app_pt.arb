@@ -52,5 +52,6 @@
   "settings": "configurações",
   "language": "idioma",
   "languageHint": "escolha o idioma para notificações recebidas",
-  "notifying": "notificando"
+  "notifying": "notificando",
+  "howToUse": "como usar?"
 }

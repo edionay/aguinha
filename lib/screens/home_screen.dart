@@ -1,34 +1,22 @@
+import 'dart:async';
 import 'dart:ui';
 
-import 'package:aguinha/ad_state.dart';
 import 'package:aguinha/aguinha_user.dart';
-import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/provider.dart';
-import 'package:aguinha/screens/add_friend_screen.dart';
-import 'package:aguinha/screens/friends_screen.dart';
-import 'package:aguinha/screens/settings_screen.dart';
-import 'package:aguinha/ui/subtitle.dart';
-import 'package:aguinha/screens/username_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:aguinha/screens/home_screen/ad_section.dart';
+import 'package:aguinha/screens/premium_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:aguinha/common.dart';
-
-import 'home_screen/bottom_menu_section.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'home_screen/custom_drawer.dart';
 import 'home_screen/friends_section.dart';
 import 'home_screen/main_header.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+  static String id = 'home_screen';
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -38,29 +26,39 @@ class _HomeScreenState extends State<HomeScreen> {
   late AguinhaUser currentUser;
   bool loadedUser = false;
 
-  void launchURL() async {
-    final _url =
-        'mailto:aguinha@edionay.com?subject=${AppLocalizations.of(context)!.supportMailTitle}&body=';
-    try {
-      await canLaunch(_url)
-          ? await launch(_url)
-          : throw 'Could not launch $_url';
-    } catch (error) {
-      print(error);
-    }
+  InAppPurchase _iap = InAppPurchase.instance;
+  bool _available = true;
+  List<ProductDetails> _products = [];
+  List<PurchaseDetails> _purchases = [];
+  late StreamSubscription _subscription;
+  late ProductDetails subscription;
+
+  Future<void> initialize() async {
+    _available = await _iap.isAvailable();
+
+    if (_available) {}
   }
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+  Future<void> _getPrducts() async {
+    Set<String> ids = Set.from(['basic_premium']);
+    ProductDetailsResponse response = await _iap.queryProductDetails(ids);
+    print('produtos');
+
+    setState(() {
+      subscription = response.productDetails.first;
+    });
+    print(response.productDetails.first.id);
+  }
+
+  void _buySubscription(ProductDetails subscription) {
+    final PurchaseParam purchaseParam =
+        PurchaseParam(productDetails: subscription);
+    _iap.buyNonConsumable(purchaseParam: purchaseParam);
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification!;
       AndroidNotification? android = message.notification?.android;
@@ -70,6 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     });
+
+    _getPrducts();
+    super.initState();
   }
 
   @override
@@ -104,85 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       extendBodyBehindAppBar: true,
-      endDrawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: kPrimaryColor,
-              ),
-              child: Column(
-                children: [],
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.person_add),
-              title: Text(AppLocalizations.of(context)!.addFriend),
-              onTap: () {
-                Navigator.popAndPushNamed(context, AddUserScreen.id);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.group),
-              title: Text(AppLocalizations.of(context)!.friendsRequests),
-              onTap: () {
-                Navigator.popAndPushNamed(context, FriendsScreen.id);
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.feedback),
-              title: Text(AppLocalizations.of(context)!.support),
-              onTap: () {
-                launchURL();
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text(AppLocalizations.of(context)!.settings),
-              onTap: () {
-                Navigator.popAndPushNamed(context, SettingsScreen.id);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text(AppLocalizations.of(context)!.logout),
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    final provider = Provider.of<GoogleSignInProvider>(context,
-                        listen: false);
-                    provider
-                        .logout()
-                        .then((value) => Navigator.pop(context))
-                        .catchError((error) {
-                      Navigator.pop(context);
-                      final snackBar =
-                          SnackBar(content: Text(error.toString()));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    });
-                    return Container(
-                      height: 100,
-                      color: kPrimaryColor,
-                      child: Center(
-                          child: Text(
-                        'saindo...',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      endDrawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -198,6 +121,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: kDefaultPadding * 2,
                   ),
+                  AdSection()
+                  // TextButton(
+                  //     onPressed: () {
+                  //       Navigator.pushNamed(context, PremiumScreen.id);
+                  //       // _buySubscription(subscription);
+                  //     },
+                  //     child: Text('Premium'))
                 ],
               ),
             ],

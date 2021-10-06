@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AddUserScreen extends StatefulWidget {
-  const AddUserScreen({Key? key}) : super(key: key);
+  const AddUserScreen({this.username});
   static String id = 'add_friend_screen';
+  final String? username;
 
   @override
   _AddUserScreenState createState() => _AddUserScreenState();
@@ -23,6 +24,66 @@ class _AddUserScreenState extends State<AddUserScreen> {
   void validateInput() {
     print(username);
     if (username == null) throw 'insira um nome de usuário válido';
+  }
+
+  Future<void> search() async {
+    try {
+      validateInput();
+      setState(() {
+        loading = true;
+      });
+      friend = await API.getUserByUsername(username!);
+      final sendRequest = await showModalBottomSheet(
+          backgroundColor: kPrimaryColor,
+          context: context,
+          builder: (context) {
+            return SendRequestModal(friend!);
+          });
+      if (sendRequest != null && sendRequest) {
+        await API.sendFriendshipRequest(friend!);
+        setState(() {
+          loading = false;
+          username = null;
+          friend = null;
+        });
+        final snackBar = SnackBar(
+            action: SnackBarAction(
+              label: AppLocalizations.of(context)!.goToRequests,
+              onPressed: () {
+                Navigator.pushNamed(context, FriendsScreen.id);
+              },
+            ),
+            content: Text(AppLocalizations.of(context)!.requestSent));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else
+        setState(() {
+          loading = false;
+          username = null;
+          friend = null;
+        });
+    } catch (error) {
+      setState(() {
+        loading = false;
+      });
+      final snackBar = SnackBar(content: Text(error.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      print(error.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.username != null) {
+      print(widget.username);
+      setState(() {
+        username = widget.username;
+        search();
+      });
+    }
+    print('url');
+    print(Uri.base.path);
   }
 
   @override
@@ -102,54 +163,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                           const EdgeInsets.only(bottom: kDefaultPadding * 2),
                       child: TextButton(
                         onPressed: () async {
-                          try {
-                            validateInput();
-                            setState(() {
-                              loading = true;
-                            });
-                            friend = await API.getUserByUsername(username!);
-                            final sendRequest = await showModalBottomSheet(
-                                backgroundColor: kPrimaryColor,
-                                context: context,
-                                builder: (context) {
-                                  return SendRequestModal(friend!);
-                                });
-                            if (sendRequest != null && sendRequest) {
-                              await API.sendFriendshipRequest(friend!);
-                              setState(() {
-                                loading = false;
-                                username = null;
-                                friend = null;
-                              });
-                              final snackBar = SnackBar(
-                                  action: SnackBarAction(
-                                    label: AppLocalizations.of(context)!
-                                        .goToRequests,
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, FriendsScreen.id);
-                                    },
-                                  ),
-                                  content: Text(AppLocalizations.of(context)!
-                                      .requestSent));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else
-                              setState(() {
-                                loading = false;
-                                username = null;
-                                friend = null;
-                              });
-                          } catch (error) {
-                            setState(() {
-                              loading = false;
-                            });
-                            final snackBar =
-                                SnackBar(content: Text(error.toString()));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            print(error.toString());
-                          }
+                          await search();
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(

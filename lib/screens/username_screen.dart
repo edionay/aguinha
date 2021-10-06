@@ -2,6 +2,7 @@ import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
+import 'package:aguinha/screens/onboarding_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aguinha/common.dart';
@@ -225,10 +226,12 @@ class _UsernameScreenState extends State<UsernameScreen> {
                               });
                               try {
                                 await API.setUsername(nickname);
+                                final currentUser = await API.getCurrentUser();
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HomeScreen()),
+                                        builder: (context) => OnboardingScreen(
+                                            currentUser.username)),
                                     (route) => false);
                               } catch (error) {
                                 setState(() {

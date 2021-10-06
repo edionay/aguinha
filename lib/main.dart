@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:aguinha/ad_state.dart';
+import 'package:aguinha/payment_provider.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
 import 'package:aguinha/screens/error_screen.dart';
 import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
+import 'package:aguinha/screens/onboarding_screen.dart';
+import 'package:aguinha/screens/premium_screen.dart';
 import 'package:aguinha/screens/settings_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,13 +18,19 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'api.dart';
 import 'common.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+
+import 'package:flutter/services.dart' show PlatformException;
 
 const bool USE_EMULATOR = false;
 
@@ -52,6 +62,9 @@ Future<void> main() async {
   await Firebase.initializeApp();
   final initFuture = MobileAds.instance.initialize();
   final adState = AdState(initFuture);
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
+  }
 
   if (USE_EMULATOR) {
     _connectToFirebaseEmulator();
@@ -70,6 +83,10 @@ Future<void> main() async {
     sound: true,
   );
 
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
+  }
+
   runApp(Provider.value(
       value: adState, builder: (context, child) => AguinhaApp()));
 }
@@ -82,11 +99,24 @@ class AguinhaApp extends StatefulWidget {
 }
 
 class _AguinhaAppState extends State<AguinhaApp> {
+  Future<void> initUniLinks() async {
+    // Uri parsing may fail, so we use a try/catch FormatException.
+    try {
+      final initialUri = await getInitialUri();
+      print(initialUri);
+      // Use the uri and warn the user, if it is not correct,
+      // but keep in mind it could be `null`.
+    } on FormatException {
+      // Handle exception by warning the user their action did not succeed
+      // return?
+    }
+    // ... other exception handling like PlatformException
+  }
+
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
+
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       print('cliquei agora');
@@ -111,7 +141,6 @@ class _AguinhaAppState extends State<AguinhaApp> {
     });
 
     API.getCurrentUser().then((currentUser) {
-      print('updating token');
       FirebaseMessaging.instance.getToken().then((fmcToken) {
         final ref = FirebaseFirestore.instance
             .collection('users')
@@ -125,6 +154,19 @@ class _AguinhaAppState extends State<AguinhaApp> {
         });
       });
     });
+
+    final Stream purchaseUpdated = InAppPurchase.instance.purchaseStream;
+    purchaseUpdated.listen((purchaseDetailsList) {
+      print('listinha');
+      print(purchaseDetailsList);
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (error) {
+      // handle error here.
+    });
+
+    initUniLinks();
+    super.initState();
   }
 
   @override
@@ -165,9 +207,14 @@ class _AguinhaAppState extends State<AguinhaApp> {
         debugShowCheckedModeBanner: false,
         routes: {
           FriendsScreen.id: (context) => FriendsScreen(),
+          HomeScreen.id: (context) => HomeScreen(),
           AddUserScreen.id: (context) => AddUserScreen(),
           UsernameScreen.id: (context) => UsernameScreen(),
-          SettingsScreen.id: (context) => SettingsScreen()
+          SettingsScreen.id: (context) => SettingsScreen(),
+          PremiumScreen.id: (context) => PremiumScreen(),
+          '/u/*': (context) => AddUserScreen(
+                username: 'EDIONAY#4544',
+              )
         },
       ),
     );

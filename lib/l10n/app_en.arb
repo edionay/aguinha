@@ -55,5 +55,6 @@
   "settings": "settings",
   "language": "language",
   "languageHint": "set the language for incoming notifications",
-  "notifying": "notifying"
+  "notifying": "notifying",
+  "howToUse": "how to use?"
 }
