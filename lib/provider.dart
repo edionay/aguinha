@@ -66,6 +66,15 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   Future logout() async {
     googleSignIn.disconnect();
+    final fmcToken = await FirebaseMessaging.instance.getToken();
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('tokens')
+        .doc(fmcToken)
+        .delete();
+
     await FirebaseAuth.instance.signOut();
   }
 }
