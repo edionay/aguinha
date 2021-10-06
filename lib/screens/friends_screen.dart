@@ -1,19 +1,13 @@
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/friends_screen/sections/received_invites_section.dart';
-import 'package:aguinha/screens/friends_screen/sections/sent_requests_sections.dart';
-import 'package:aguinha/screens/username_screen.dart';
 import 'package:aguinha/ui/subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'add_friend_screen.dart';
 import 'package:aguinha/common.dart';
-import 'error_screen.dart';
-import 'login_screen.dart';
 
 class FriendsScreen extends StatelessWidget {
   const FriendsScreen({Key? key}) : super(key: key);
