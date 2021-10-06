@@ -91,111 +91,108 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.addFriend),
-          elevation: 0,
-          backgroundColor: kPrimaryColor,
-          shape: Border.all(width: 0, color: kPrimaryColor),
-        ),
-        body: Column(
-          children: [
-            SvgPicture.asset(
-              'assets/nav_background.svg',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topLeft,
-            ),
-            Center(
-              child: Stack(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (loading)
-                    Expanded(child: Center(child: CircularProgressIndicator()))
-                  else
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultPadding * 2),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .typeYourFriendsUsername,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: kPrimaryColor,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: kDefaultPadding,
-                              ),
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .thisUsernameCanBeFoundAtHomeScreen,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.addFriend),
+        elevation: 0,
+        backgroundColor: kPrimaryColor,
+        shape: Border.all(width: 0, color: kPrimaryColor),
+      ),
+      body: Column(
+        children: [
+          SvgPicture.asset(
+            'assets/nav_background.svg',
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.topLeft,
+          ),
+          Center(
+            child: Stack(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (loading)
+                  Expanded(child: Center(child: CircularProgressIndicator()))
+                else
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: kDefaultPadding * 2),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .typeYourFriendsUsername,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
                                   color: kPrimaryColor,
-                                ),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: kDefaultPadding,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .thisUsernameCanBeFoundAtHomeScreen,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: kPrimaryColor,
                               ),
-                              SizedBox(
-                                height: kDefaultPadding,
-                              ),
-                              TextField(
-                                autofocus: true,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                    hintText: AppLocalizations.of(context)!
-                                        .usernameExample),
-                                textCapitalization:
-                                    TextCapitalization.characters,
-                                textInputAction: TextInputAction.search,
-                                onSubmitted: (value) async {},
-                                onChanged: (value) {
-                                  setState(() {
-                                    username = value;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                              height: kDefaultPadding,
+                            ),
+                            TextField(
+                              autofocus: true,
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!
+                                      .usernameExample),
+                              textCapitalization: TextCapitalization.characters,
+                              textInputAction: TextInputAction.search,
+                              onSubmitted: (value) async {},
+                              onChanged: (value) {
+                                setState(() {
+                                  username = value;
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: kDefaultPadding * 2),
-                          child: TextButton(
-                            onPressed: () async {
-                              validateInput();
-                              await search();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: kDefaultPadding * 4,
-                                  vertical: kDefaultPadding),
-                              decoration: BoxDecoration(
-                                  color: kPrimaryColor,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  border: Border.all(color: kPrimaryColor)),
-                              child: Text(
-                                AppLocalizations.of(context)!.search,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: kDefaultPadding * 2),
+                        child: TextButton(
+                          onPressed: () async {
+                            validateInput();
+                            await search();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: kDefaultPadding * 4,
+                                vertical: kDefaultPadding),
+                            decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(20.0),
+                                border: Border.all(color: kPrimaryColor)),
+                            child: Text(
+                              AppLocalizations.of(context)!.search,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                ],
-              ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

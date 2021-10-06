@@ -21,125 +21,123 @@ class FriendsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.friendsRequests),
-          backgroundColor: kPrimaryColor,
-          elevation: 0,
-          shape: Border.all(width: 0, color: kPrimaryColor),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.person_add),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddUserScreen()));
-              },
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            SvgPicture.asset(
-              'assets/nav_background.svg',
-              alignment: Alignment.topLeft,
-              fit: BoxFit.fitWidth,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                  horizontal: kDefaultPadding * 2, vertical: kDefaultPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Subtitle(title: AppLocalizations.of(context)!.received),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  Column(
-                    children: [
-                      StreamBuilder<QuerySnapshot>(
-                        stream: API.getReceivedRequests(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.lightBlueAccent,
-                              ),
-                            );
-                          }
-                          final receivedRequests = snapshot.data!.docs;
-                          if (receivedRequests.isEmpty)
-                            return Text('nenhuma solicitação');
-                          List<ReceivedRequestTile> requestsWidgets = [];
-                          for (var request in receivedRequests) {
-                            print(request.get('nickname'));
-                            receivedRequests.indexOf(request);
-
-                            requestsWidgets.add(
-                              ReceivedRequestTile(AguinhaUser(
-                                  request.id,
-                                  request.get('nickname'),
-                                  request.get('suffix'))),
-                            );
-                          }
-                          return Column(
-                            children: requestsWidgets,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.friendsRequests),
+        backgroundColor: kPrimaryColor,
+        elevation: 0,
+        shape: Border.all(width: 0, color: kPrimaryColor),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person_add),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddUserScreen()));
+            },
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          SvgPicture.asset(
+            'assets/nav_background.svg',
+            alignment: Alignment.topLeft,
+            fit: BoxFit.fitWidth,
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+                horizontal: kDefaultPadding * 2, vertical: kDefaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Subtitle(title: AppLocalizations.of(context)!.received),
+                SizedBox(
+                  height: kDefaultPadding,
+                ),
+                Column(
+                  children: [
+                    StreamBuilder<QuerySnapshot>(
+                      stream: API.getReceivedRequests(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.lightBlueAccent,
+                            ),
                           );
-                        },
-                      ),
-                    ],
-                  ),
-                  // FriendRequestTile(),
-                  SizedBox(
-                    height: kDefaultPadding * 3,
-                  ),
-                  Subtitle(title: AppLocalizations.of(context)!.sent),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  Column(
-                    children: [
-                      StreamBuilder<QuerySnapshot>(
-                        stream: API.getSentRequests(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.lightBlueAccent,
-                              ),
-                            );
-                          }
-                          final sentRequests = snapshot.data!.docs;
-                          if (sentRequests.isEmpty)
-                            return Text('nenhuma solicitação');
-                          List<SentRequestTile> requestsWidgets = [];
-                          for (var request in sentRequests) {
-                            print(request.get('nickname'));
-                            sentRequests.indexOf(request);
+                        }
+                        final receivedRequests = snapshot.data!.docs;
+                        if (receivedRequests.isEmpty)
+                          return Text('nenhuma solicitação');
+                        List<ReceivedRequestTile> requestsWidgets = [];
+                        for (var request in receivedRequests) {
+                          print(request.get('nickname'));
+                          receivedRequests.indexOf(request);
 
-                            requestsWidgets.add(
-                              SentRequestTile(
-                                AguinhaUser(
-                                  request.id,
-                                  request.get('nickname'),
-                                  request.get('suffix'),
-                                ),
-                              ),
-                            );
-                          }
-                          return Column(
-                            children: requestsWidgets,
+                          requestsWidgets.add(
+                            ReceivedRequestTile(AguinhaUser(
+                                request.id,
+                                request.get('nickname'),
+                                request.get('suffix'))),
                           );
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+                        }
+                        return Column(
+                          children: requestsWidgets,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                // FriendRequestTile(),
+                SizedBox(
+                  height: kDefaultPadding * 3,
+                ),
+                Subtitle(title: AppLocalizations.of(context)!.sent),
+                SizedBox(
+                  height: kDefaultPadding,
+                ),
+                Column(
+                  children: [
+                    StreamBuilder<QuerySnapshot>(
+                      stream: API.getSentRequests(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.lightBlueAccent,
+                            ),
+                          );
+                        }
+                        final sentRequests = snapshot.data!.docs;
+                        if (sentRequests.isEmpty)
+                          return Text('nenhuma solicitação');
+                        List<SentRequestTile> requestsWidgets = [];
+                        for (var request in sentRequests) {
+                          print(request.get('nickname'));
+                          sentRequests.indexOf(request);
+
+                          requestsWidgets.add(
+                            SentRequestTile(
+                              AguinhaUser(
+                                request.id,
+                                request.get('nickname'),
+                                request.get('suffix'),
+                              ),
+                            ),
+                          );
+                        }
+                        return Column(
+                          children: requestsWidgets,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

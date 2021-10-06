@@ -30,7 +30,10 @@ import 'common.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
-import 'package:flutter/services.dart' show PlatformException;
+import 'package:flutter/services.dart'
+    show PlatformException, SystemChrome, SystemUiOverlayStyle;
+
+import 'constants.dart';
 
 const bool USE_EMULATOR = false;
 
@@ -175,6 +178,7 @@ class _AguinhaAppState extends State<AguinhaApp> {
     //   DeviceOrientation.portraitUp,
     //   DeviceOrientation.portraitDown,
     // ]);
+
     return ChangeNotifierProvider(
       create: (context) => GoogleSignInProvider(),
       child: MaterialApp(
@@ -184,8 +188,13 @@ class _AguinhaAppState extends State<AguinhaApp> {
           AppLocalizations.delegate
         ],
         supportedLocales: [const Locale('en', ''), const Locale('pt', '')],
-        theme: Theme.of(context)
-            .copyWith(textTheme: GoogleFonts.montserratTextTheme()),
+        theme: Theme.of(context).copyWith(
+          textTheme: GoogleFonts.montserratTextTheme(),
+          appBarTheme: AppBarTheme(
+            // Brightness.dark will show white color icon
+            brightness: Brightness.dark,
+          ),
+        ),
         home: Scaffold(
           body: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
