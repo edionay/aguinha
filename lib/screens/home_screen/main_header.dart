@@ -3,9 +3,11 @@ import 'package:aguinha/api.dart';
 import 'package:aguinha/common.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/username_screen.dart';
+import 'package:aguinha/user_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 
 class MainHeader extends StatelessWidget {
   const MainHeader({Key? key}) : super(key: key);
@@ -59,6 +61,10 @@ class MainHeader extends StatelessWidget {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // Consumer<UserProvider>(
+                                    //     builder: (_, test, child) {
+                                    //   return Text(test.currentUser!.username);
+                                    // }),
                                     Text(
                                       currentUser!.nickname,
                                       style: TextStyle(

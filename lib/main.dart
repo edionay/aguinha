@@ -13,6 +13,7 @@ import 'package:aguinha/screens/onboarding_screen.dart';
 import 'package:aguinha/screens/premium_screen.dart';
 import 'package:aguinha/screens/settings_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
+import 'package:aguinha/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,7 +36,7 @@ import 'package:flutter/services.dart'
 
 import 'constants.dart';
 
-const bool USE_EMULATOR = false;
+const bool USE_EMULATOR = true;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
@@ -169,6 +170,7 @@ class _AguinhaAppState extends State<AguinhaApp> {
     });
 
     initUniLinks();
+
     super.initState();
   }
 
@@ -179,8 +181,15 @@ class _AguinhaAppState extends State<AguinhaApp> {
     //   DeviceOrientation.portraitDown,
     // ]);
 
-    return ChangeNotifierProvider(
-      create: (context) => GoogleSignInProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => GoogleSignInProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
+      ],
       child: MaterialApp(
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,

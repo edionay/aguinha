@@ -85,7 +85,7 @@ class API {
           usersSnapshot.get('suffix'));
       return user;
     } else
-      throw 'Usuário não encontrado';
+      throw 'usuário não encontrado';
   }
 
   static Future<String> getCurrentUserLocale() async {

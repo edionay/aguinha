@@ -1,18 +1,17 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/screens/home_screen/ad_section.dart';
-import 'package:aguinha/screens/premium_screen.dart';
+import 'package:aguinha/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:aguinha/common.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen/custom_drawer.dart';
 import 'home_screen/friends_section.dart';
 import 'home_screen/main_header.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -69,6 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
+    context.read<UserProvider>().initialize();
+
     _getPrducts();
     super.initState();
   }
@@ -76,6 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
+
+    final AguinhaUser? currentUser = context.watch<UserProvider>().currentUser;
+    print(currentUser);
 
     return Scaffold(
       appBar: AppBar(

@@ -23,6 +23,13 @@ class _FriendsSectionState extends State<FriendsSection> {
   bool notifying = false;
   Drink selectedDrink = Drink.water;
 
+  String getDailyNotificationID() {
+    DateTime today = DateTime.now();
+    return DateTime.utc(today.year, today.month, today.day, 0, 0, 0, 0)
+        .millisecondsSinceEpoch
+        .toString();
+  }
+
   Future<void> notifyAll(List<AguinhaUser> friends) async {
     List<Future> notifications = [];
     for (var friend in friends) {
@@ -290,6 +297,11 @@ class _FriendsSectionState extends State<FriendsSection> {
                 DateTime? lastSentNotification;
                 DateTime? lastReceivedNotification;
                 DateTime today = DateTime.now();
+                String dailyNotificationID =
+                    DateTime.utc(today.year, today.month, today.day, 0, 0, 0, 0)
+                        .millisecondsSinceEpoch
+                        .toString();
+
                 try {
                   Timestamp timestamp = friend.get('lastSentNotification');
                   lastSentNotification = timestamp.toDate();
@@ -304,7 +316,8 @@ class _FriendsSectionState extends State<FriendsSection> {
                       friend: aguinhaFriend,
                       notifying: notifying,
                       lastSentNotification: lastSentNotification,
-                      lastReceivedNotification: lastReceivedNotification),
+                      lastReceivedNotification: lastReceivedNotification,
+                      dailyNotificationID: dailyNotificationID),
                 );
               }
               return GridView.count(
