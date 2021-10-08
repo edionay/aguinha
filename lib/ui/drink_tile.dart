@@ -12,7 +12,7 @@ class DrinkTile extends StatelessWidget {
   final Drink drink;
   final bool selected;
   final String title;
-  final IconData icon;
+  final String icon;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +28,7 @@ class DrinkTile extends StatelessWidget {
       child: ListTile(
         enabled: false,
         leading: CircleAvatar(
-          child: Icon(
-            icon,
-            color: selected ? Colors.white : kPrimaryColor,
-          ),
+          child: Text(icon),
           backgroundColor: selected ? kPrimaryColor : Colors.white,
         ),
         trailing: Column(

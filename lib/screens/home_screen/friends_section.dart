@@ -22,6 +22,7 @@ class _FriendsSectionState extends State<FriendsSection> {
   List<AguinhaUser> friends = [];
   bool notifying = false;
   Drink selectedDrink = Drink.water;
+  String selectedEmoji = '💧';
 
   String getDailyNotificationID() {
     DateTime today = DateTime.now();
@@ -33,9 +34,30 @@ class _FriendsSectionState extends State<FriendsSection> {
   Future<void> notifyAll(List<AguinhaUser> friends) async {
     List<Future> notifications = [];
     for (var friend in friends) {
-      notifications.add(API.notify(friend));
+      notifications.add(API.notify(friend, selectedDrink));
     }
     await Future.wait(notifications);
+  }
+
+  String getEmoji(Drink drink) {
+    switch (drink) {
+      case Drink.water:
+        return '💧';
+      case Drink.beer:
+        return '🍺';
+      case Drink.coffee:
+        return '☕';
+      case Drink.juice:
+        return '🧃';
+      case Drink.wine:
+        return '🍷';
+      case Drink.milk:
+        return '🥛';
+      case Drink.tea:
+        return '🍵';
+      default:
+        return '💧';
+    }
   }
 
   @override
@@ -93,6 +115,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // TextButton(onPressed: () {}, child: Text('premium!')),
                     IconButton(
                         onPressed: () async {
                           final drink = await showModalBottomSheet(
@@ -136,7 +159,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                           Navigator.pop(context, Drink.water);
                                         },
                                         child: DrinkTile(
-                                          icon: Icons.local_drink,
+                                          icon: getEmoji(Drink.water),
                                           drink: Drink.water,
                                           title: AppLocalizations.of(context)!
                                               .water,
@@ -149,7 +172,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                           Navigator.pop(context, Drink.juice);
                                         },
                                         child: DrinkTile(
-                                          icon: Icons.local_drink,
+                                          icon: getEmoji(Drink.juice),
                                           drink: Drink.juice,
                                           title: AppLocalizations.of(context)!
                                               .juice,
@@ -159,15 +182,15 @@ class _FriendsSectionState extends State<FriendsSection> {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.pop(context, Drink.juice);
+                                          Navigator.pop(context, Drink.coffee);
                                         },
                                         child: DrinkTile(
-                                          icon: Icons.local_cafe,
-                                          drink: Drink.juice,
+                                          icon: getEmoji(Drink.coffee),
+                                          drink: Drink.coffee,
                                           title: AppLocalizations.of(context)!
                                               .coffee,
                                           selected:
-                                              selectedDrink == Drink.juice,
+                                              selectedDrink == Drink.coffee,
                                         ),
                                       ),
                                       GestureDetector(
@@ -175,7 +198,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                           Navigator.pop(context, Drink.tea);
                                         },
                                         child: DrinkTile(
-                                          icon: Icons.emoji_food_beverage,
+                                          icon: getEmoji(Drink.tea),
                                           drink: Drink.tea,
                                           title:
                                               AppLocalizations.of(context)!.tea,
@@ -184,26 +207,38 @@ class _FriendsSectionState extends State<FriendsSection> {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.pop(context, Drink.tea);
+                                          Navigator.pop(context, Drink.wine);
                                         },
                                         child: DrinkTile(
-                                          icon: Icons.wine_bar,
-                                          drink: Drink.tea,
+                                          icon: getEmoji(Drink.wine),
+                                          drink: Drink.wine,
                                           title: AppLocalizations.of(context)!
                                               .wine,
-                                          selected: selectedDrink == Drink.tea,
+                                          selected: selectedDrink == Drink.wine,
                                         ),
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.pop(context, Drink.tea);
+                                          Navigator.pop(context, Drink.milk);
                                         },
                                         child: DrinkTile(
-                                          icon: Icons.sports_bar,
-                                          drink: Drink.tea,
+                                          icon: getEmoji(Drink.milk),
+                                          drink: Drink.milk,
+                                          title: AppLocalizations.of(context)!
+                                              .milk,
+                                          selected: selectedDrink == Drink.milk,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.pop(context, Drink.beer);
+                                        },
+                                        child: DrinkTile(
+                                          icon: getEmoji(Drink.beer),
+                                          drink: Drink.beer,
                                           title: AppLocalizations.of(context)!
                                               .beer,
-                                          selected: selectedDrink == Drink.tea,
+                                          selected: selectedDrink == Drink.beer,
                                         ),
                                       ),
                                     ],
@@ -212,11 +247,14 @@ class _FriendsSectionState extends State<FriendsSection> {
                               );
                             },
                           );
-                          // if (drink != null) {
-                          //   setState(() {
-                          //     selectedDrink = drink;
-                          //   });
-                          // }
+                          print(drink);
+
+                          if (drink != null) {
+                            setState(() {
+                              selectedEmoji = getEmoji(drink);
+                              selectedDrink = drink;
+                            });
+                          }
                         },
                         icon: Icon(Icons.arrow_drop_down)),
                     Card(
@@ -224,13 +262,9 @@ class _FriendsSectionState extends State<FriendsSection> {
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(kDefaultPadding),
-                          child: Icon(
-                            Icons.local_drink,
-                            size: 40,
-                            color: notifying ? Colors.grey : kPrimaryColor,
-                          ),
-                        )),
+                            padding: const EdgeInsets.all(kDefaultPadding),
+                            child: Text(selectedEmoji,
+                                style: TextStyle(fontSize: 30)))),
                     SizedBox(
                       width: kDefaultPadding / 2,
                     ),
@@ -315,6 +349,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                   FriendTile(
                       friend: aguinhaFriend,
                       notifying: notifying,
+                      selectedDrink: selectedDrink,
                       lastSentNotification: lastSentNotification,
                       lastReceivedNotification: lastReceivedNotification,
                       dailyNotificationID: dailyNotificationID),

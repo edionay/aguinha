@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/constants.dart';
+import 'package:aguinha/payment_provider.dart';
 import 'package:aguinha/screens/home_screen/ad_section.dart';
 import 'package:aguinha/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,23 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_available) {}
   }
 
-  Future<void> _getPrducts() async {
-    Set<String> ids = Set.from(['basic_premium']);
-    ProductDetailsResponse response = await _iap.queryProductDetails(ids);
-    print('produtos');
-
-    setState(() {
-      subscription = response.productDetails.first;
-    });
-    print(response.productDetails.first.id);
-  }
-
-  void _buySubscription(ProductDetails subscription) {
-    final PurchaseParam purchaseParam =
-        PurchaseParam(productDetails: subscription);
-    _iap.buyNonConsumable(purchaseParam: purchaseParam);
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -69,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     context.read<UserProvider>().initialize();
+    context.read<PaymentProvider>().initialize();
 
-    _getPrducts();
     super.initState();
   }
 
@@ -79,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final _size = MediaQuery.of(context).size;
 
     final AguinhaUser? currentUser = context.watch<UserProvider>().currentUser;
-    print(currentUser);
 
     return Scaffold(
       appBar: AppBar(
@@ -144,7 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
 enum Drink {
   water,
+  coffee,
   juice,
   milk,
   tea,
+  wine,
+  beer,
 }

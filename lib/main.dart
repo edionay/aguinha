@@ -10,7 +10,6 @@ import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
 import 'package:aguinha/screens/onboarding_screen.dart';
-import 'package:aguinha/screens/premium_screen.dart';
 import 'package:aguinha/screens/settings_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
 import 'package:aguinha/user_provider.dart';
@@ -34,6 +33,7 @@ import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:flutter/services.dart'
     show PlatformException, SystemChrome, SystemUiOverlayStyle;
 
+import 'components/premium/premium_screen.dart';
 import 'constants.dart';
 
 const bool USE_EMULATOR = true;
@@ -159,16 +159,6 @@ class _AguinhaAppState extends State<AguinhaApp> {
       });
     });
 
-    final Stream purchaseUpdated = InAppPurchase.instance.purchaseStream;
-    purchaseUpdated.listen((purchaseDetailsList) {
-      print('listinha');
-      print(purchaseDetailsList);
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
-
     initUniLinks();
 
     super.initState();
@@ -188,6 +178,9 @@ class _AguinhaAppState extends State<AguinhaApp> {
         ),
         ChangeNotifierProvider(
           create: (_) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PaymentProvider(),
         ),
       ],
       child: MaterialApp(

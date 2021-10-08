@@ -4,6 +4,7 @@ import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/common.dart';
 import 'package:aguinha/constants.dart';
+import 'package:aguinha/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
@@ -14,10 +15,12 @@ class FriendTile extends StatefulWidget {
       required this.notifying,
       this.lastSentNotification,
       this.lastReceivedNotification,
-      required this.dailyNotificationID});
+      required this.dailyNotificationID,
+      required this.selectedDrink});
   final bool notifying;
   final AguinhaUser friend;
   final String dailyNotificationID;
+  final Drink selectedDrink;
 
   final DateTime? lastSentNotification, lastReceivedNotification;
 
@@ -143,7 +146,7 @@ class _FriendTileState extends State<FriendTile> {
                       disabled = true;
                     });
                     try {
-                      await API.notify(widget.friend);
+                      await API.notify(widget.friend, widget.selectedDrink);
 
                       final snackBar = SnackBar(
                           content: Text(
