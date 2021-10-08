@@ -7,12 +7,14 @@ class DrinkTile extends StatelessWidget {
       {required this.drink,
       required this.title,
       required this.selected,
-      required this.icon});
+      required this.icon,
+      required this.premium});
 
   final Drink drink;
   final bool selected;
   final String title;
   final String icon;
+  final bool premium;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class DrinkTile extends StatelessWidget {
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (drink != Drink.water)
+            if (!premium && drink != Drink.water)
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: kDefaultPadding, vertical: kDefaultPadding / 2),
@@ -42,7 +44,7 @@ class DrinkTile extends StatelessWidget {
                     color: selected ? kPrimaryColor : Colors.white,
                     borderRadius: BorderRadius.circular(40)),
                 child: Text(
-                  AppLocalizations.of(context)!.soon,
+                  AppLocalizations.of(context)!.premium,
                   style: TextStyle(
                       color: selected ? Colors.white : kPrimaryColor,
                       fontSize: 10),

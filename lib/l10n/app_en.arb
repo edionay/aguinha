@@ -56,5 +56,6 @@
   "language": "language",
   "languageHint": "set the language for incoming notifications",
   "notifying": "notifying",
-  "howToUse": "how to use?"
+  "howToUse": "how to use?",
+  "premium": "premium"
 }

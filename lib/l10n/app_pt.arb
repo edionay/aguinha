@@ -53,5 +53,6 @@
   "language": "idioma",
   "languageHint": "escolha o idioma para notificações recebidas",
   "notifying": "notificando",
-  "howToUse": "como usar?"
+  "howToUse": "como usar?",
+  "premium": "premium"
 }
