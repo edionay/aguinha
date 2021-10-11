@@ -29,6 +29,7 @@ import 'api.dart';
 import 'common.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 import 'package:flutter/services.dart'
     show PlatformException, SystemChrome, SystemUiOverlayStyle;
@@ -36,7 +37,7 @@ import 'package:flutter/services.dart'
 import 'components/premium/premium_screen.dart';
 import 'constants.dart';
 
-const bool USE_EMULATOR = true;
+const bool USE_EMULATOR = false;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';

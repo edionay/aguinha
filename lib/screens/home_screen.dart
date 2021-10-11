@@ -26,19 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late AguinhaUser currentUser;
   bool loadedUser = false;
 
-  InAppPurchase _iap = InAppPurchase.instance;
-  bool _available = true;
-  List<ProductDetails> _products = [];
-  List<PurchaseDetails> _purchases = [];
-  late StreamSubscription _subscription;
-  late ProductDetails subscription;
-
-  Future<void> initialize() async {
-    _available = await _iap.isAvailable();
-
-    if (_available) {}
-  }
-
   @override
   void initState() {
     // TODO: implement initState

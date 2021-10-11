@@ -22,8 +22,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
   bool loading = false;
 
   void validateInput() {
-    print(username);
-    if (username == null) throw 'insira um nome de usuário válido';
+    if (username == null || username!.isEmpty)
+      throw 'insira um nome de usuário válido';
   }
 
   Future<void> search() async {
@@ -36,48 +36,46 @@ class _AddUserScreenState extends State<AddUserScreen> {
       });
 
       friend = await API.getUserByUsername(username!);
-      final sendRequest = await showModalBottomSheet(
-          backgroundColor: kPrimaryColor,
-          context: context,
-          builder: (context) {
-            return SendRequestModal(friend!);
+      if (friend != null) {
+        final sendRequest = await showModalBottomSheet(
+            backgroundColor: kPrimaryColor,
+            context: context,
+            builder: (context) {
+              return SendRequestModal(friend!);
+            });
+
+        if (sendRequest != null && sendRequest) {
+          await API.sendFriendshipRequest(friend!);
+          final snackBar = SnackBar(
+              action: SnackBarAction(
+                label: AppLocalizations.of(context)!.goToRequests,
+                onPressed: () {
+                  Navigator.pushNamed(context, FriendsScreen.id);
+                },
+              ),
+              content: Text(AppLocalizations.of(context)!.requestSent));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          setState(() {
+            loading = false;
+            username = null;
           });
-      if (sendRequest != null && sendRequest) {
-        await API.sendFriendshipRequest(friend!);
-        setState(() {
-          loading = false;
-          username = null;
-          friend = null;
-        });
-        final snackBar = SnackBar(
-            action: SnackBarAction(
-              label: AppLocalizations.of(context)!.goToRequests,
-              onPressed: () {
-                Navigator.pushNamed(context, FriendsScreen.id);
-              },
-            ),
-            content: Text(AppLocalizations.of(context)!.requestSent));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else
-        setState(() {
-          loading = false;
-          username = null;
-          friend = null;
-        });
+        } else
+          setState(() {
+            loading = false;
+            username = null;
+          });
+      }
     } catch (error) {
+      final snackBar = SnackBar(content: Text(error.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {
         loading = false;
       });
-      final snackBar = SnackBar(content: Text(error.toString()));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      print(error.toString());
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     if (widget.username != null) {
       print(widget.username);
       setState(() {
@@ -85,8 +83,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
         search();
       });
     }
-    print('url');
-    print(Uri.base.path);
+    super.initState();
   }
 
   @override
@@ -98,100 +95,98 @@ class _AddUserScreenState extends State<AddUserScreen> {
         backgroundColor: kPrimaryColor,
         shape: Border.all(width: 0, color: kPrimaryColor),
       ),
-      body: Column(
+      body: Stack(
         children: [
           SvgPicture.asset(
             'assets/nav_background.svg',
             fit: BoxFit.fitWidth,
             alignment: Alignment.topLeft,
           ),
-          Center(
-            child: Stack(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (loading)
-                  Expanded(child: Center(child: CircularProgressIndicator()))
-                else
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: kDefaultPadding * 2),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .typeYourFriendsUsername,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: kPrimaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: kDefaultPadding,
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .thisUsernameCanBeFoundAtHomeScreen,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: kPrimaryColor,
-                              ),
-                            ),
-                            SizedBox(
-                              height: kDefaultPadding,
-                            ),
-                            TextField(
-                              autofocus: true,
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)!
-                                      .usernameExample),
-                              textCapitalization: TextCapitalization.characters,
-                              textInputAction: TextInputAction.search,
-                              onSubmitted: (value) async {},
-                              onChanged: (value) {
-                                setState(() {
-                                  username = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: kDefaultPadding * 2),
-                        child: TextButton(
-                          onPressed: () async {
-                            validateInput();
-                            await search();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: kDefaultPadding * 4,
-                                vertical: kDefaultPadding),
-                            decoration: BoxDecoration(
-                                color: kPrimaryColor,
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(color: kPrimaryColor)),
-                            child: Text(
-                              AppLocalizations.of(context)!.search,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+          if (!loading) ...[
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: kDefaultPadding * 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.typeYourFriendsUsername,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold),
                   ),
-              ],
+                  SizedBox(
+                    height: kDefaultPadding,
+                  ),
+                  // Text(
+                  //   AppLocalizations.of(context)!
+                  //       .thisUsernameCanBeFoundAtHomeScreen,
+                  //   textAlign: TextAlign.center,
+                  //   style: TextStyle(
+                  //     color: kPrimaryColor,
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: kDefaultPadding,
+                  ),
+                  TextField(
+                    cursorColor: kPrimaryColor,
+                    autofocus: true,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: kPrimaryColor)),
+                        hintStyle: TextStyle(color: kSecondaryColor),
+                        helperText: AppLocalizations.of(context)!
+                            .thisUsernameCanBeFoundAtHomeScreen,
+                        hintText:
+                            AppLocalizations.of(context)!.usernameExample),
+                    textCapitalization: TextCapitalization.characters,
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (value) {
+                      search();
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        username = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
+            Positioned(
+              right: 0,
+              left: 0,
+              bottom: kDefaultPadding,
+              child: TextButton(
+                onPressed: () async {
+                  await search();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: kDefaultPadding * 4,
+                      vertical: kDefaultPadding),
+                  decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(color: kPrimaryColor)),
+                  child: Text(
+                    AppLocalizations.of(context)!.search,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ] else
+            Center(
+              child: CircularProgressIndicator(
+                color: kPrimaryColor,
+              ),
+            ),
         ],
       ),
     );
@@ -271,153 +266,3 @@ class SendRequestModal extends StatelessWidget {
     );
   }
 }
-
-// class AddUserScreen extends StatefulWidget {
-//   // const AddUserScreen({required this.username});
-//   //
-//   // final username;
-//
-//   static String id = 'add_friend_screen';
-//
-//   @override
-//   _AddUserScreenState createState() => _AddUserScreenState();
-// }
-//
-// class _AddUserScreenState extends State<AddUserScreen> {
-//   bool loading = true;
-//   String username = '';
-//   AguinhaUser? friend;
-//   final _controller = TextEditingController();
-//
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     API.getUserByUsername(username).then((user) {
-//       setState(() {
-//         loading = false;
-//         friend = user;
-//       });
-//     }).catchError((error) {
-//       setState(() {
-//         loading = false;
-//         _controller.text = username;
-//         username = username;
-//       });
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: Text('Adicionar amigo'),
-//         ),
-//         body: Column(
-//           children: [
-//             if (loading)
-//               Center(child: CircularProgressIndicator())
-//             else if (friend == null)
-//               Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Text(
-//                     'insira o nome de usuário do seu amigo',
-//                     textAlign: TextAlign.center,
-//                     style: TextStyle(fontSize: 20, color: kPrimaryColor),
-//                   ),
-//                   TextField(
-//                     controller: _controller,
-//                     onChanged: (value) {
-//                       setState(() {
-//                         username = value;
-//                       });
-//                     },
-//                   ),
-//                   ElevatedButton(
-//                       onPressed: () {
-//                         setState(() {
-//                           loading = true;
-//                         });
-//                         API.getUserByUsername(username).then((user) {
-//                           setState(() {
-//                             friend = user;
-//                             loading = false;
-//                           });
-//                         }).catchError((error) {
-//                           setState(() {
-//                             loading = false;
-//                           });
-//                           final snackBar =
-//                               SnackBar(content: Text('Usuário inexistente'));
-//                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//                         });
-//                       },
-//                       child: Text('Buscar'))
-//                 ],
-//               )
-//             else if (friend != null)
-//               Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Text('Deseja enviar uma solicitação de amizade para'),
-//                   SizedBox(
-//                     height: kDefaultPadding * 2,
-//                   ),
-//                   Column(
-//                     crossAxisAlignment: CrossAxisAlignment.end,
-//                     children: [
-//                       Text(
-//                         friend!.nickname,
-//                         style: TextStyle(
-//                             fontSize: 40,
-//                             color: kPrimaryColor,
-//                             fontWeight: FontWeight.bold),
-//                       ),
-//                       Text('#${friend!.suffix}',
-//                           textAlign: TextAlign.left,
-//                           style: TextStyle(
-//                               fontWeight: FontWeight.normal,
-//                               fontSize: 24,
-//                               color: Colors.grey)),
-//                     ],
-//                   ),
-//                   SizedBox(
-//                     height: kDefaultPadding,
-//                   ),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       ElevatedButton(
-//                         onPressed: () async {
-//                           setState(() {
-//                             loading = true;
-//                           });
-//                           await API.sendFriendshipRequest(friend!);
-//                           Navigator.pop(context);
-//                         },
-//                         style: ElevatedButton.styleFrom(primary: kPrimaryColor),
-//                         child: Text('Sim'),
-//                       ),
-//                       SizedBox(
-//                         width: kDefaultPadding,
-//                       ),
-//                       TextButton(
-//                         onPressed: () {
-//                           setState(() {
-//                             friend = null;
-//                           });
-//                         },
-//                         child: Text(
-//                           'Não',
-//                           style: TextStyle(color: kPrimaryColor),
-//                         ),
-//                       ),
-//                     ],
-//                   )
-//                 ],
-//               )
-//           ],
-//         ));
-//   }
-// }
