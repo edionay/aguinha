@@ -7,7 +7,7 @@ import 'package:aguinha/constants.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
 import 'package:aguinha/screens/onboarding_screen.dart';
-import 'package:aguinha/screens/settings_screen.dart';
+import 'package:aguinha/components/settings/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
