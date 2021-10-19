@@ -76,17 +76,26 @@ class API {
   }
 
   static Future<AguinhaUser> getCurrentUser() async {
-    final usersSnapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+    try {
+      if (FirebaseAuth.instance.currentUser != null) {
+        final usersSnapshot = await FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
 
-    if (usersSnapshot.exists) {
-      final user = AguinhaUser(usersSnapshot.id, usersSnapshot.get('nickname'),
-          usersSnapshot.get('suffix'));
-      return user;
-    } else
-      throw 'usuário não encontrado';
+        if (usersSnapshot.exists) {
+          final user = AguinhaUser(usersSnapshot.id,
+              usersSnapshot.get('nickname'), usersSnapshot.get('suffix'));
+          return user;
+        } else
+          throw 'usuário não encontrado';
+      }
+      throw 'usuário não autenticado';
+    } catch (error) {
+      print('aham');
+      print(error);
+      throw error;
+    }
   }
 
   static Future<String> getCurrentUserLocale() async {

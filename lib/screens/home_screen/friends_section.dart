@@ -3,12 +3,14 @@ import 'package:aguinha/api.dart';
 import 'package:aguinha/common.dart';
 import 'package:aguinha/components/premium/premium_screen.dart';
 import 'package:aguinha/constants.dart';
+import 'package:aguinha/payment_provider.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/ui/drink_tile.dart';
 import 'package:aguinha/ui/friend_tile.dart';
 import 'package:aguinha/ui/subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/src/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FriendsSection extends StatefulWidget {
@@ -24,8 +26,6 @@ class _FriendsSectionState extends State<FriendsSection> {
   bool notifying = false;
   Drink selectedDrink = Drink.water;
   String selectedEmoji = '💧';
-
-  bool isPremium = false;
 
   String getDailyNotificationID() {
     DateTime today = DateTime.now();
@@ -63,28 +63,8 @@ class _FriendsSectionState extends State<FriendsSection> {
     }
   }
 
-  Future<void> getPremiumInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? premiumInfo = prefs.getBool('isPremium');
-    await prefs.setBool('isPremium', false);
-    if (premiumInfo != null) {
-      setState(() {
-        isPremium = premiumInfo;
-      });
-    }
-  }
-
-  drinkSelectionAction(Drink drink) {
-    if (isPremium || drink == Drink.water) {
-      Navigator.pop(context, drink);
-    } else {
-      Navigator.pushNamed(context, PremiumScreen.id);
-    }
-  }
-
   @override
   void initState() {
-    getPremiumInfo();
     super.initState();
   }
 
@@ -149,6 +129,18 @@ class _FriendsSectionState extends State<FriendsSection> {
                           final drink = await showModalBottomSheet(
                             context: context,
                             builder: (context) {
+                              bool isPremium =
+                                  context.watch<PaymentProvider>().isPremium;
+
+                              drinkSelectionAction(Drink drink) {
+                                if (isPremium || drink == Drink.water) {
+                                  Navigator.pop(context, drink);
+                                } else {
+                                  Navigator.pushNamed(
+                                      context, PremiumScreen.id);
+                                }
+                              }
+
                               return Container(
                                 color: kPrimaryColor,
                                 child: SingleChildScrollView(
@@ -371,12 +363,13 @@ class _FriendsSectionState extends State<FriendsSection> {
                         .toString();
 
                 try {
-                  Timestamp timestamp = friend.get('lastSentNotification');
-                  lastSentNotification = timestamp.toDate();
+                  lastSentNotification = DateTime.fromMillisecondsSinceEpoch(
+                      friend.get('lastSentNotification'));
                 } catch (error) {}
                 try {
-                  Timestamp timestamp = friend.get('lastReceivedNotification');
-                  lastReceivedNotification = timestamp.toDate();
+                  lastReceivedNotification =
+                      DateTime.fromMillisecondsSinceEpoch(
+                          friend.get('lastReceivedNotification'));
                 } catch (error) {}
                 friends.add(aguinhaFriend);
                 friendsWidgets.add(

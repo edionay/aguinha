@@ -1,6 +1,7 @@
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/common.dart';
+import 'package:aguinha/components/premium/premium_screen.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
@@ -75,6 +76,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           Divider(),
+          ListTile(
+            leading: Icon(Icons.verified),
+            title: Text('Premium'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PremiumScreen()),
+              );
+            },
+          ),
           ListTile(
             leading: Icon(Icons.feedback),
             title: Text(AppLocalizations.of(context)!.support),

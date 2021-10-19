@@ -23,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AguinhaUser currentUser;
   bool loadedUser = false;
 
   @override
@@ -48,8 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
-
-    final AguinhaUser? currentUser = context.watch<UserProvider>().currentUser;
 
     return Scaffold(
       appBar: AppBar(
