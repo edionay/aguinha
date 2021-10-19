@@ -4,7 +4,7 @@ import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/common.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/home_screen.dart';
+import 'package:aguinha/components/home_screen/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';

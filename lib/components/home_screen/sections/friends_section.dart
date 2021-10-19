@@ -4,7 +4,7 @@ import 'package:aguinha/common.dart';
 import 'package:aguinha/components/premium/premium_screen.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/payment_provider.dart';
-import 'package:aguinha/screens/home_screen.dart';
+import 'package:aguinha/components/home_screen/home_screen.dart';
 import 'package:aguinha/ui/drink_tile.dart';
 import 'package:aguinha/ui/friend_tile.dart';
 import 'package:aguinha/ui/subtitle.dart';

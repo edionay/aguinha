@@ -1,6 +1,6 @@
 import 'package:aguinha/api.dart';
+import 'package:aguinha/components/tutorial/tutorial_screen.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/onboarding_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aguinha/common.dart';
@@ -228,7 +228,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => OnboardingScreen(
+                                        builder: (context) => TutorialScreen(
                                             currentUser.username)),
                                     (route) => false);
                               } catch (error) {

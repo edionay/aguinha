@@ -1,17 +1,14 @@
-import 'dart:async';
-
-import 'package:aguinha/aguinha_user.dart';
+import 'package:aguinha/components/home_screen/sections/ad_section.dart';
+import 'package:aguinha/components/home_screen/sections/custom_drawer.dart';
+import 'package:aguinha/components/home_screen/sections/friends_section.dart';
+import 'package:aguinha/components/home_screen/sections/main_header.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/payment_provider.dart';
-import 'package:aguinha/screens/home_screen/ad_section.dart';
 import 'package:aguinha/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:aguinha/common.dart';
-import 'home_screen/custom_drawer.dart';
-import 'home_screen/friends_section.dart';
-import 'home_screen/main_header.dart';
+
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -93,12 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: kDefaultPadding * 2,
                   ),
                   AdSection()
-                  // TextButton(
-                  //     onPressed: () {
-                  //       Navigator.pushNamed(context, PremiumScreen.id);
-                  //       // _buySubscription(subscription);
-                  //     },
-                  //     child: Text('Premium'))
                 ],
               ),
             ],
