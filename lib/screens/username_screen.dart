@@ -1,7 +1,5 @@
 import 'package:aguinha/api.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/friends_screen.dart';
-import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/onboarding_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';

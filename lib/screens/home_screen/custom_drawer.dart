@@ -1,11 +1,11 @@
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/common.dart';
+import 'package:aguinha/components/friends_requests/friends_requests_screen.dart';
 import 'package:aguinha/components/premium/premium_screen.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
-import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/onboarding_screen.dart';
 import 'package:aguinha/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +72,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             leading: Icon(Icons.group),
             title: Text(AppLocalizations.of(context)!.friendsRequests),
             onTap: () {
-              Navigator.popAndPushNamed(context, FriendsScreen.id);
+              Navigator.popAndPushNamed(context, FriendsRequestsScreen.id);
             },
           ),
           Divider(),

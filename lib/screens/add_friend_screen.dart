@@ -1,8 +1,8 @@
 import 'package:aguinha/aguinha_user.dart';
 import 'package:aguinha/api.dart';
 import 'package:aguinha/common.dart';
+import 'package:aguinha/components/friends_requests/friends_requests_screen.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/friends_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,7 +50,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               action: SnackBarAction(
                 label: AppLocalizations.of(context)!.goToRequests,
                 onPressed: () {
-                  Navigator.pushNamed(context, FriendsScreen.id);
+                  Navigator.pushNamed(context, FriendsRequestsScreen.id);
                 },
               ),
               content: Text(AppLocalizations.of(context)!.requestSent));

@@ -1,24 +1,19 @@
-import 'dart:io';
-
 import 'package:aguinha/aguinha_app_brain.dart';
+import 'package:aguinha/components/friends_requests/friends_requests_screen.dart';
 import 'package:aguinha/payment_provider.dart';
 import 'package:aguinha/provider.dart';
 import 'package:aguinha/screens/add_friend_screen.dart';
 import 'package:aguinha/screens/error_screen.dart';
-import 'package:aguinha/screens/friends_screen.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:aguinha/screens/login_screen.dart';
 import 'package:aguinha/screens/settings_screen.dart';
 import 'package:aguinha/screens/username_screen.dart';
 import 'package:aguinha/user_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'api.dart';
 import 'common.dart';
 import 'components/premium/premium_screen.dart';
 
@@ -83,7 +78,7 @@ class _AguinhaAppState extends State<AguinhaApp> {
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          FriendsScreen.id: (context) => FriendsScreen(),
+          FriendsRequestsScreen.id: (context) => FriendsRequestsScreen(),
           HomeScreen.id: (context) => HomeScreen(),
           AddUserScreen.id: (context) => AddUserScreen(),
           UsernameScreen.id: (context) => UsernameScreen(),
