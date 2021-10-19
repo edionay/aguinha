@@ -1,7 +1,7 @@
 import 'package:aguinha/common.dart';
-import 'package:aguinha/components/tutorial/pages/add_friends_page.dart';
-import 'package:aguinha/components/tutorial/pages/notify_friends_page.dart';
-import 'package:aguinha/components/tutorial/pages/username_page.dart';
+import 'package:aguinha/components/tutorial/sections/add_friends_page.dart';
+import 'package:aguinha/components/tutorial/sections/notify_friends_page.dart';
+import 'package:aguinha/components/tutorial/sections/username_page.dart';
 import 'package:aguinha/screens/home_screen.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
