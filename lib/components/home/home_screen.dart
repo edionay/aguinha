@@ -1,7 +1,7 @@
-import 'package:aguinha/components/home_screen/sections/ad_section.dart';
-import 'package:aguinha/components/home_screen/sections/custom_drawer.dart';
-import 'package:aguinha/components/home_screen/sections/friends_section.dart';
-import 'package:aguinha/components/home_screen/sections/main_header.dart';
+import 'package:aguinha/components/home/sections/ad_section.dart';
+import 'package:aguinha/components/home/sections/custom_drawer.dart';
+import 'package:aguinha/components/home/sections/friends_section.dart';
+import 'package:aguinha/components/home/sections/main_header.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/providers/payment_provider.dart';
 import 'package:aguinha/providers/user_provider.dart';
@@ -98,14 +98,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-enum Drink {
-  water,
-  coffee,
-  juice,
-  milk,
-  tea,
-  wine,
-  beer,
 }

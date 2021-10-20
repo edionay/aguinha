@@ -1,6 +1,6 @@
+import 'package:aguinha/models/drink.dart';
 import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/components/home_screen/home_screen.dart';
 
 class DrinkTile extends StatelessWidget {
   const DrinkTile(

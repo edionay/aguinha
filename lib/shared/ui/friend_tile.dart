@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:aguinha/models/aguinha_user.dart';
+import 'package:aguinha/models/drink.dart';
 import 'package:aguinha/services/api.dart';
 import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/components/home_screen/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 

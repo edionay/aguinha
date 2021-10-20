@@ -4,7 +4,7 @@ import 'package:aguinha/providers/payment_provider.dart';
 import 'package:aguinha/providers/provider.dart';
 import 'package:aguinha/components/add_friend/add_friend_screen.dart';
 import 'package:aguinha/components/error_screen.dart';
-import 'package:aguinha/components/home_screen/home_screen.dart';
+import 'package:aguinha/components/home/home_screen.dart';
 import 'package:aguinha/components/login/login_screen.dart';
 import 'package:aguinha/components/settings/settings_screen.dart';
 import 'package:aguinha/components/username/username_screen.dart';

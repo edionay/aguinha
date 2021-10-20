@@ -1,11 +1,11 @@
+import 'package:aguinha/components/home/home_brain.dart';
 import 'package:aguinha/models/aguinha_user.dart';
-import 'package:aguinha/services/api.dart';
+import 'package:aguinha/models/drink.dart';
 import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/components/premium/premium_screen.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/providers/payment_provider.dart';
-import 'package:aguinha/components/home_screen/home_screen.dart';
-import 'package:aguinha/components/home_screen/drink_tile.dart';
+import 'package:aguinha/components/home/ui/drink_tile.dart';
 import 'package:aguinha/shared/ui/friend_tile.dart';
 import 'package:aguinha/shared/ui/subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,42 +26,6 @@ class _FriendsSectionState extends State<FriendsSection> {
   bool notifying = false;
   Drink selectedDrink = Drink.water;
   String selectedEmoji = '💧';
-
-  String getDailyNotificationID() {
-    DateTime today = DateTime.now();
-    return DateTime.utc(today.year, today.month, today.day, 0, 0, 0, 0)
-        .millisecondsSinceEpoch
-        .toString();
-  }
-
-  Future<void> notifyAll(List<AguinhaUser> friends) async {
-    List<Future> notifications = [];
-    for (var friend in friends) {
-      notifications.add(API.notify(friend, selectedDrink));
-    }
-    await Future.wait(notifications);
-  }
-
-  String getEmoji(Drink drink) {
-    switch (drink) {
-      case Drink.water:
-        return '💧';
-      case Drink.beer:
-        return '🍺';
-      case Drink.coffee:
-        return '☕';
-      case Drink.juice:
-        return '🧃';
-      case Drink.wine:
-        return '🍷';
-      case Drink.milk:
-        return '🥛';
-      case Drink.tea:
-        return '🍵';
-      default:
-        return '💧';
-    }
-  }
 
   @override
   void initState() {
@@ -98,7 +62,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else {
                           try {
-                            await notifyAll(friends);
+                            await HomeBrain.notifyAll(friends, selectedDrink);
                             final snackBar = SnackBar(
                               content: Text(AppLocalizations.of(context)!
                                   .successfulNotifyAlert),
@@ -123,7 +87,6 @@ class _FriendsSectionState extends State<FriendsSection> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // TextButton(onPressed: () {}, child: Text('premium!')),
                     IconButton(
                         onPressed: () async {
                           final drink = await showModalBottomSheet(
@@ -180,7 +143,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                         },
                                         child: DrinkTile(
                                           premium: isPremium,
-                                          icon: getEmoji(Drink.water),
+                                          icon: HomeBrain.getEmoji(Drink.water),
                                           drink: Drink.water,
                                           title: AppLocalizations.of(context)!
                                               .water,
@@ -194,7 +157,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                         },
                                         child: DrinkTile(
                                           premium: isPremium,
-                                          icon: getEmoji(Drink.juice),
+                                          icon: HomeBrain.getEmoji(Drink.juice),
                                           drink: Drink.juice,
                                           title: AppLocalizations.of(context)!
                                               .juice,
@@ -208,7 +171,8 @@ class _FriendsSectionState extends State<FriendsSection> {
                                         },
                                         child: DrinkTile(
                                           premium: isPremium,
-                                          icon: getEmoji(Drink.coffee),
+                                          icon:
+                                              HomeBrain.getEmoji(Drink.coffee),
                                           drink: Drink.coffee,
                                           title: AppLocalizations.of(context)!
                                               .coffee,
@@ -222,7 +186,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                         },
                                         child: DrinkTile(
                                           premium: isPremium,
-                                          icon: getEmoji(Drink.tea),
+                                          icon: HomeBrain.getEmoji(Drink.tea),
                                           drink: Drink.tea,
                                           title:
                                               AppLocalizations.of(context)!.tea,
@@ -235,7 +199,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                         },
                                         child: DrinkTile(
                                           premium: isPremium,
-                                          icon: getEmoji(Drink.wine),
+                                          icon: HomeBrain.getEmoji(Drink.wine),
                                           drink: Drink.wine,
                                           title: AppLocalizations.of(context)!
                                               .wine,
@@ -248,7 +212,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                         },
                                         child: DrinkTile(
                                           premium: isPremium,
-                                          icon: getEmoji(Drink.milk),
+                                          icon: HomeBrain.getEmoji(Drink.milk),
                                           drink: Drink.milk,
                                           title: AppLocalizations.of(context)!
                                               .milk,
@@ -261,7 +225,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                                         },
                                         child: DrinkTile(
                                           premium: isPremium,
-                                          icon: getEmoji(Drink.beer),
+                                          icon: HomeBrain.getEmoji(Drink.beer),
                                           drink: Drink.beer,
                                           title: AppLocalizations.of(context)!
                                               .beer,
@@ -277,7 +241,7 @@ class _FriendsSectionState extends State<FriendsSection> {
 
                           if (drink != null) {
                             setState(() {
-                              selectedEmoji = getEmoji(drink);
+                              selectedEmoji = HomeBrain.getEmoji(drink);
                               selectedDrink = drink;
                             });
                           }
@@ -356,11 +320,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                 friendsDocuments.indexOf(friend);
                 DateTime? lastSentNotification;
                 DateTime? lastReceivedNotification;
-                DateTime today = DateTime.now();
-                String dailyNotificationID =
-                    DateTime.utc(today.year, today.month, today.day, 0, 0, 0, 0)
-                        .millisecondsSinceEpoch
-                        .toString();
+                String dailyNotificationID = HomeBrain.getDailyNotificationID();
 
                 try {
                   lastSentNotification = DateTime.fromMillisecondsSinceEpoch(
@@ -383,12 +343,8 @@ class _FriendsSectionState extends State<FriendsSection> {
                 );
               }
               return GridView.count(
-                // primary: true,
                 shrinkWrap: true,
-                // crossAxisSpacing: 20,
-                // mainAxisSpacing: 20,
                 childAspectRatio: 0.4,
-                // physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 scrollDirection: Axis.horizontal,
                 children: friendsWidgets,
