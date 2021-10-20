@@ -1,15 +1,9 @@
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 
-import 'package:aguinha/aguinha_user.dart';
-import 'package:aguinha/api.dart';
-import 'package:aguinha/components/friends_requests/sections/received_request_tile.dart';
 import 'package:aguinha/components/friends_requests/sections/received_requests_section.dart';
-import 'package:aguinha/components/friends_requests/sections/sent_request_tile.dart';
 import 'package:aguinha/components/friends_requests/sections/sent_requests_section.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/add_friend_screen.dart';
-import 'package:aguinha/ui/subtitle.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:aguinha/components/add_friend/add_friend_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

@@ -1,7 +1,7 @@
-import 'package:aguinha/api.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/services/api.dart';
+import 'package:aguinha/shared/common.dart';
 
-import 'aguinha_user.dart';
+import '../models/aguinha_user.dart';
 
 class UserProvider extends ChangeNotifier {
   AguinhaUser? _currentUser;

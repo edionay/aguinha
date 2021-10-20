@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -107,8 +107,6 @@ class PaymentProvider with ChangeNotifier {
       prefs.setBool('isPremium', false);
     }
   }
-
-  Future<void> _getPastPurchases() async {}
 
   PurchaseDetails hasPurchased(String productID) {
     print(productID);

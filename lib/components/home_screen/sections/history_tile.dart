@@ -1,4 +1,4 @@
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
 
 class HistoryTile extends StatelessWidget {

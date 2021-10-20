@@ -3,11 +3,11 @@ import 'package:aguinha/components/home_screen/sections/custom_drawer.dart';
 import 'package:aguinha/components/home_screen/sections/friends_section.dart';
 import 'package:aguinha/components/home_screen/sections/main_header.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/payment_provider.dart';
-import 'package:aguinha/user_provider.dart';
+import 'package:aguinha/providers/payment_provider.dart';
+import 'package:aguinha/providers/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,6 @@
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/payment_provider.dart';
+import 'package:aguinha/providers/payment_provider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 

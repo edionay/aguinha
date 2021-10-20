@@ -1,7 +1,7 @@
-import 'package:aguinha/api.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/services/api.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/ui/subtitle.dart';
+import 'package:aguinha/shared/ui/subtitle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -98,7 +98,6 @@ class LanguageRadio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // padding: const EdgeInsets.only(bottom: kDefaultPadding),
       child: Row(
         children: [
           Icon(

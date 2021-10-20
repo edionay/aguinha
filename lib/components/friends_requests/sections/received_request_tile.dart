@@ -1,6 +1,6 @@
-import 'package:aguinha/aguinha_user.dart';
-import 'package:aguinha/api.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/models/aguinha_user.dart';
+import 'package:aguinha/services/api.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
 import 'package:flutter_svg/svg.dart';
 

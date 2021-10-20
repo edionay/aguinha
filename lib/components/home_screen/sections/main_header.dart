@@ -1,13 +1,11 @@
-import 'package:aguinha/aguinha_user.dart';
-import 'package:aguinha/api.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/models/aguinha_user.dart';
+import 'package:aguinha/services/api.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/screens/username_screen.dart';
-import 'package:aguinha/user_provider.dart';
+import 'package:aguinha/components/username/username_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart';
 
 class MainHeader extends StatelessWidget {
   const MainHeader({Key? key}) : super(key: key);

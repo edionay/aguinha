@@ -1,12 +1,12 @@
-import 'package:aguinha/aguinha_user.dart';
-import 'package:aguinha/api.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/models/aguinha_user.dart';
+import 'package:aguinha/services/api.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/components/friends_requests/friends_requests_screen.dart';
 import 'package:aguinha/components/premium/premium_screen.dart';
 import 'package:aguinha/components/tutorial/tutorial_screen.dart';
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/provider.dart';
-import 'package:aguinha/screens/add_friend_screen.dart';
+import 'package:aguinha/providers/provider.dart';
+import 'package:aguinha/components/add_friend/add_friend_screen.dart';
 import 'package:aguinha/components/settings/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';

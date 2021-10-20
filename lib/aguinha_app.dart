@@ -1,20 +1,20 @@
-import 'package:aguinha/aguinha_app_brain.dart';
+import 'package:aguinha/aguinha_brain.dart';
 import 'package:aguinha/components/friends_requests/friends_requests_screen.dart';
-import 'package:aguinha/payment_provider.dart';
-import 'package:aguinha/provider.dart';
-import 'package:aguinha/screens/add_friend_screen.dart';
-import 'package:aguinha/screens/error_screen.dart';
+import 'package:aguinha/providers/payment_provider.dart';
+import 'package:aguinha/providers/provider.dart';
+import 'package:aguinha/components/add_friend/add_friend_screen.dart';
+import 'package:aguinha/components/error_screen.dart';
 import 'package:aguinha/components/home_screen/home_screen.dart';
 import 'package:aguinha/components/login/login_screen.dart';
 import 'package:aguinha/components/settings/settings_screen.dart';
-import 'package:aguinha/screens/username_screen.dart';
-import 'package:aguinha/user_provider.dart';
+import 'package:aguinha/components/username/username_screen.dart';
+import 'package:aguinha/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'common.dart';
+import 'shared/common.dart';
 import 'components/premium/premium_screen.dart';
 
 class AguinhaApp extends StatefulWidget {

@@ -1,5 +1,5 @@
-import 'package:aguinha/ad_state.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/providers/ad_state.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,7 @@ class _AdSectionState extends State<AdSection> {
         banner = BannerAd(
             size: AdSize.banner,
             adUnitId: adState.bannerAdUnitId,
-            listener: adState.adListenet,
+            listener: adState.adListener,
             request: AdRequest())
           ..load();
       });

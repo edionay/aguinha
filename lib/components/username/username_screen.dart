@@ -1,9 +1,9 @@
-import 'package:aguinha/api.dart';
+import 'package:aguinha/services/api.dart';
 import 'package:aguinha/components/tutorial/tutorial_screen.dart';
 import 'package:aguinha/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 
 class UsernameScreen extends StatefulWidget {
   const UsernameScreen({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:aguinha/ad_state.dart';
+import 'package:aguinha/providers/ad_state.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'aguinha_app.dart';
-import 'common.dart';
+import 'shared/common.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 const bool USE_EMULATOR = false;

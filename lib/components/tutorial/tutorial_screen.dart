@@ -1,4 +1,4 @@
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/components/tutorial/sections/add_friends_page.dart';
 import 'package:aguinha/components/tutorial/sections/notify_friends_page.dart';
 import 'package:aguinha/components/tutorial/sections/username_page.dart';

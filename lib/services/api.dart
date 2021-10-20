@@ -1,10 +1,9 @@
 import 'dart:math';
-import 'package:aguinha/aguinha_user.dart';
+import 'package:aguinha/models/aguinha_user.dart';
 import 'package:aguinha/components/home_screen/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class API {
   static getSentRequests() {

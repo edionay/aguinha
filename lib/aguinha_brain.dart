@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'api.dart';
+import 'services/api.dart';
 
 class AguinhaAppBrain {
   static void updateDeviceToken() {

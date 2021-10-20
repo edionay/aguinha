@@ -1,8 +1,8 @@
 import 'package:aguinha/constants.dart';
-import 'package:aguinha/provider.dart';
+import 'package:aguinha/providers/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:aguinha/common.dart';
+import 'package:aguinha/shared/common.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
