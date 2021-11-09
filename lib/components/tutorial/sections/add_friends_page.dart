@@ -1,4 +1,5 @@
 import 'package:aguinha/constants.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,7 +50,8 @@ class AddFriendsPage extends StatelessWidget {
                       vertical: kDefaultPadding),
                   child: RichText(
                     text: TextSpan(
-                      text: 'peça o nome de usuário para seus amigos',
+                      text:
+                          '${AppLocalizations.of(context)!.askYourFriendsForTheirUsername}',
                       style: GoogleFonts.montserrat(
                           fontSize: 16,
                           color: Colors.white,

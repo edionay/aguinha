@@ -1,6 +1,7 @@
 import 'package:aguinha/components/home/home_brain.dart';
 import 'package:aguinha/models/aguinha_user.dart';
 import 'package:aguinha/models/drink.dart';
+import 'package:aguinha/providers/drink_provider.dart';
 import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/components/premium/premium_screen.dart';
 import 'package:aguinha/constants.dart';
@@ -24,7 +25,6 @@ class _FriendsSectionState extends State<FriendsSection> {
   List<FriendTile> friendsWidgets = [];
   List<AguinhaUser> friends = [];
   bool notifying = false;
-  Drink selectedDrink = Drink.water;
   String selectedEmoji = '💧';
 
   @override
@@ -34,6 +34,9 @@ class _FriendsSectionState extends State<FriendsSection> {
 
   @override
   Widget build(BuildContext context) {
+    Drink selectedDrink =
+        Provider.of<DrinkProvider>(context, listen: false).selectedDrink;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -89,7 +92,7 @@ class _FriendsSectionState extends State<FriendsSection> {
                   children: [
                     IconButton(
                         onPressed: () async {
-                          final drink = await showModalBottomSheet(
+                          final Drink drink = await showModalBottomSheet(
                             context: context,
                             builder: (context) {
                               bool isPremium =
@@ -240,9 +243,10 @@ class _FriendsSectionState extends State<FriendsSection> {
                           );
 
                           if (drink != null) {
+                            Provider.of<DrinkProvider>(context, listen: false)
+                                .setDrink(drink);
                             setState(() {
                               selectedEmoji = HomeBrain.getEmoji(drink);
-                              selectedDrink = drink;
                             });
                           }
                         },

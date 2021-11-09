@@ -1,4 +1,5 @@
 import 'package:aguinha/providers/ad_state.dart';
+import 'package:aguinha/providers/payment_provider.dart';
 import 'package:aguinha/shared/common.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -31,20 +32,25 @@ class _AdSectionState extends State<AdSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (banner == null)
-          SizedBox(
-            height: 50,
-          )
-        else
-          Container(
-            height: 50,
-            child: AdWidget(
-              ad: banner!,
-            ),
-          ),
-      ],
+    return Consumer<PaymentProvider>(
+      builder: (context, provider, child) {
+        return Column(
+          children: [
+            if (provider.isPremium) Container(),
+            if (!provider.isPremium && banner != null)
+              Container(
+                height: 50,
+                child: AdWidget(
+                  ad: banner!,
+                ),
+              ),
+            if (!provider.isPremium && banner == null)
+              Container(
+                height: 50,
+              ),
+          ],
+        );
+      },
     );
   }
 }

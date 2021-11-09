@@ -244,12 +244,6 @@ class _UsernameScreenState extends State<UsernameScreen> {
                             }
                           }
                         }
-
-                        // await setUsername(nickname);
-                        // Navigator.pushAndRemoveUntil(
-                        //     context,
-                        //     MaterialPageRoute(builder: (context) => HomeScreen()),
-                        //     (route) => false);
                       } catch (error) {
                         setState(() {
                           loading = false;

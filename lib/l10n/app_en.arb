@@ -57,5 +57,8 @@
   "languageHint": "set the language for incoming notifications",
   "notifying": "notifying",
   "howToUse": "how to use?",
-  "premium": "premium"
+  "premium": "premium",
+  "askYourFriendsForTheirUsername" : "ask your friends for their username",
+  "test": "rest",
+  "tap": "tap "
 }

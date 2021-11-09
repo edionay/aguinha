@@ -54,5 +54,8 @@
   "languageHint": "escolha o idioma para notificações recebidas",
   "notifying": "notificando",
   "howToUse": "como usar?",
-  "premium": "premium"
+  "premium": "premium",
+  "askYourFriendsForTheirUsername": "peça o nome de usuário para seus amigos",
+  "test": "rest",
+  "tap": "toque em "
 }
