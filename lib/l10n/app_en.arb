@@ -73,5 +73,10 @@
   "afterThat": " after that, they all will receive a notification that you drank water",
   "menu": "menu",
   "optionsLocation": "the mentioned above options can be found in the",
-  "section": "section"
+  "section": "section",
+  "noAds": "no ads",
+  "supportAppDevelopment": "support the app development",
+  "differentBeverages": "let your friends know that you're which beverage you're drinking",
+  "youAre": "you are a ",
+  "subscribeFor": "subscribe for US$0.99/year"
 }

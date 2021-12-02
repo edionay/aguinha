@@ -1,6 +1,6 @@
-import 'package:aguinha/shared/common.dart';
 import 'package:aguinha/constants.dart';
 import 'package:aguinha/providers/payment_provider.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
@@ -53,14 +53,13 @@ class PremiumScreen extends StatelessWidget {
                 color: kPrimaryColor,
               ),
               PremiumRow(
-                text:
-                    'avise que está tomando outras bebidas (café, chá, suco...)',
+                text: AppLocalizations.of(context)!.differentBeverages,
               ),
               PremiumRow(
-                text: 'sem propagandas',
+                text: AppLocalizations.of(context)!.noAds,
               ),
               PremiumRow(
-                text: 'apoie o desenvolvimento do aplicativo',
+                text: AppLocalizations.of(context)!.supportAppDevelopment,
               ),
               Container(
                 margin: EdgeInsets.only(
@@ -96,7 +95,7 @@ class PremiumScreen extends StatelessWidget {
                   child: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                        text: 'Você é um ',
+                        text: AppLocalizations.of(context)!.youAre,
                         style: TextStyle(fontSize: 18),
                         children: [
                           TextSpan(

@@ -70,5 +70,10 @@
   "afterThat": " após isso, todos eles receberão uma notificação informando que você tomou água",
   "menu": "menu",
   "optionsLocation": "as opções mencionadas anteriormente podem ser encontradas na opção ",
-  "section": ""
+  "section": "",
+  "noAds": "sem propagandas",
+  "supportAppDevelopment": "apoie o desenvolvimento do aplicativo",
+  "differentBeverages": "avise que está tomando outras bebidas (café, chá, suco...)",
+  "youAre": "você é um",
+  "subscribeFor": "assine por R$5,99/ano"
 }
