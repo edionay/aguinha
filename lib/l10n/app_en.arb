@@ -58,7 +58,20 @@
   "notifying": "notifying",
   "howToUse": "how to use?",
   "premium": "premium",
-  "askYourFriendsForTheirUsername" : "ask your friends for their username",
+  "askYourFriendsForTheirUsername" : "ask your friends for their usernames",
   "test": "rest",
-  "tap": "tap "
+  "tap": "tap ",
+  "done": "done",
+  "username": "username",
+  "usernameSet": "your username is now set as ",
+  "shareYourCompleteUsername": "share your complete username (with # and number) with your friends, so they can add you as a friend",
+  "addFriends": "add friends",
+  "typeTheirUsername": "to add someone and type their username",
+  "afterInviteSent": "after sending an invite, your friend must accept the request by tapping ",
+  "tellYourFriendsYoureDrinking": "notify your friends that you're drinking water!",
+  "toNotifyYourFriends": " to notify your friends",
+  "afterThat": " after that, they all will receive a notification that you drank water",
+  "menu": "menu",
+  "optionsLocation": "the mentioned above options can be found in the",
+  "section": "section"
 }

@@ -1,5 +1,5 @@
 import 'package:aguinha/constants.dart';
-import 'package:flutter/material.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,7 +35,7 @@ class UsernamePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(kDefaultPadding * 2),
                   child: Text(
-                    'nome de usuário',
+                    AppLocalizations.of(context)!.username,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 30,
@@ -49,12 +49,12 @@ class UsernamePage extends StatelessWidget {
                       vertical: kDefaultPadding),
                   child: RichText(
                     text: TextSpan(
-                      text: 'seu nome de usuário ficou definido como ',
+                      text: '${AppLocalizations.of(context)!.usernameSet} ',
                       style: GoogleFonts.montserrat(
                           fontSize: 16, fontWeight: FontWeight.w300),
                       children: [
                         TextSpan(
-                            text: ' $username ',
+                            text: username,
                             style: TextStyle(
                                 backgroundColor: Colors.white,
                                 color: kPrimaryColor,
@@ -70,8 +70,8 @@ class UsernamePage extends StatelessWidget {
                       vertical: kDefaultPadding),
                   child: RichText(
                     text: TextSpan(
-                      text:
-                          'compartilhe este nome completo (com # e número) com seus amigos para que eles possam adicionar você',
+                      text: AppLocalizations.of(context)!
+                          .shareYourCompleteUsername,
                       style: GoogleFonts.montserrat(
                           fontSize: 16,
                           color: Colors.white,

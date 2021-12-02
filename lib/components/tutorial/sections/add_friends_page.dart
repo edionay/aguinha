@@ -35,7 +35,7 @@ class AddFriendsPage extends StatelessWidget {
                   padding: const EdgeInsets.all(kDefaultPadding * 2),
                   child: Center(
                     child: Text(
-                      'adicione amigos',
+                      AppLocalizations.of(context)!.addFriends,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 30,
@@ -67,7 +67,7 @@ class AddFriendsPage extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "toque em ",
+                          text: AppLocalizations.of(context)!.tap,
                           style: GoogleFonts.montserrat(
                               fontSize: 16,
                               color: Colors.white,
@@ -80,14 +80,14 @@ class AddFriendsPage extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                            text: ' adicionar amigo ',
+                            text:
+                                ' ${AppLocalizations.of(context)!.addFriend} ',
                             style: GoogleFonts.montserrat(
                                 fontSize: 16,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
                         TextSpan(
-                          text:
-                              "para adicionar alguém e insira o nome de usuário",
+                          text: AppLocalizations.of(context)!.typeTheirUsername,
                           style: GoogleFonts.montserrat(
                               fontSize: 16,
                               color: Colors.white,
@@ -103,8 +103,7 @@ class AddFriendsPage extends StatelessWidget {
                       vertical: kDefaultPadding),
                   child: RichText(
                     text: TextSpan(
-                        text:
-                            'após enviar um convite, seu amigo deve aceitar o pedido tocando em ',
+                        text: AppLocalizations.of(context)!.afterInviteSent,
                         style: GoogleFonts.montserrat(
                             fontSize: 16,
                             color: Colors.white,
@@ -117,7 +116,8 @@ class AddFriendsPage extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                              text: 'solicitações de amizade',
+                              text:
+                                  ' ${AppLocalizations.of(context)!.friendsRequests}',
                               style: GoogleFonts.montserrat(
                                   fontSize: 16,
                                   color: Colors.white,

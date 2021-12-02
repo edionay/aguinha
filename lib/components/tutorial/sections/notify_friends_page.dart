@@ -1,5 +1,5 @@
 import 'package:aguinha/constants.dart';
-import 'package:flutter/material.dart';
+import 'package:aguinha/shared/common.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -33,7 +33,7 @@ class NotifyFriendsPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(kDefaultPadding * 2),
                   child: Text(
-                    'avise seus amigos que tomou água!',
+                    AppLocalizations.of(context)!.tellYourFriendsYoureDrinking,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 30,
@@ -47,7 +47,7 @@ class NotifyFriendsPage extends StatelessWidget {
                       vertical: kDefaultPadding),
                   child: RichText(
                     text: TextSpan(
-                        text: 'toque em ',
+                        text: AppLocalizations.of(context)!.tap,
                         style: GoogleFonts.montserrat(
                             fontSize: 16, fontWeight: FontWeight.w300),
                         children: [
@@ -58,14 +58,16 @@ class NotifyFriendsPage extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: 'notificar todos',
+                            text:
+                                ' ${AppLocalizations.of(context)!.notify} ${AppLocalizations.of(context)!.everybody}',
                             style: GoogleFonts.montserrat(
                                 fontSize: 16,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
                           TextSpan(
-                            text: ' para avisar seus amigos',
+                            text: AppLocalizations.of(context)!
+                                .toNotifyYourFriends,
                             style: GoogleFonts.montserrat(
                                 fontSize: 16,
                                 color: Colors.white,
@@ -80,8 +82,7 @@ class NotifyFriendsPage extends StatelessWidget {
                       vertical: kDefaultPadding),
                   child: RichText(
                     text: TextSpan(
-                      text:
-                          'após isso, todos eles receberão uma notificação informando que você tomou água',
+                      text: AppLocalizations.of(context)!.afterThat,
                       style: GoogleFonts.montserrat(
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
@@ -95,15 +96,14 @@ class NotifyFriendsPage extends StatelessWidget {
                       vertical: kDefaultPadding),
                   child: RichText(
                     text: TextSpan(
-                        text:
-                            'as opções mencionadas anteriormente podem ser encontradas no botão ',
+                        text: AppLocalizations.of(context)!.optionsLocation,
                         style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontWeight: FontWeight.w300,
                             fontSize: 16),
                         children: [
                           TextSpan(
-                            text: 'MENU',
+                            text: ' ${AppLocalizations.of(context)!.menu} ',
                             style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -114,6 +114,11 @@ class NotifyFriendsPage extends StatelessWidget {
                               Icons.menu_rounded,
                               color: Colors.white,
                             ),
+                          ),
+                          TextSpan(
+                            text: ' ${AppLocalizations.of(context)!.section} ',
+                            style: GoogleFonts.montserrat(
+                                color: Colors.white, fontSize: 16),
                           ),
                         ]),
                   ),

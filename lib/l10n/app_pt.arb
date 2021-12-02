@@ -57,5 +57,18 @@
   "premium": "premium",
   "askYourFriendsForTheirUsername": "peça o nome de usuário para seus amigos",
   "test": "rest",
-  "tap": "toque em "
+  "tap": "toque em ",
+  "done": "concluído",
+  "username": "nome de usuário",
+  "usernameSet": "seu nome de usuário ficou definido como ",
+  "shareYourCompleteUsername": "compartilhe este nome completo (com # e número) com seus amigos para que eles possam adicionar você",
+  "addFriends": "adicione amigos",
+  "typeTheirUsername": "para adicionar alguém e insira o nome de usuário",
+  "afterInviteSent": "após enviar um convite, seu amigo deve aceitar o pedido tocando em ",
+  "tellYourFriendsYoureDrinking": "avise seus amigos que tomou água!",
+  "toNotifyYourFriends": " para avisar seus amigos",
+  "afterThat": " após isso, todos eles receberão uma notificação informando que você tomou água",
+  "menu": "menu",
+  "optionsLocation": "as opções mencionadas anteriormente podem ser encontradas na opção ",
+  "section": ""
 }
